@@ -37,7 +37,7 @@ router.post('/file-upload', function(req, res) {
   fs.readFile(filepath, 'utf8', function (err, data) {
     var parsed = xml2json.parser(data);//,'','html'
     //var document = JSON.stringify(parsed);
-    var inside = parsed.dokumentplanistyczny.zalaczniki.dochody.pozycja;
+    var inside = parsed.dokumentplanistyczny.zalaczniki.wydatki.pozycja;
     
     var MongoClient = require('mongodb').MongoClient, format = require('util').format;
     MongoClient.connect('mongodb://mo14248_wiz_budz:kdpWizualizujeBudzet123@mongo0.mydevil.net:27017/mo14248_wiz_budz', function(err, db) {
