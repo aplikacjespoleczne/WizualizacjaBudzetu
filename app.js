@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var multer = require('multer');
+var debug = require('debug')('WizualizacjaBudzetu');
 
 var app = express();
 
@@ -62,4 +63,13 @@ app.use(function(err, req, res, next) {
     });
 });
 
-module.exports = app;
+// Probably not needed as app is started from here
+//module.exports = app;
+
+
+// Moved from bin/www
+app.set('port', process.env.PORT || 3000);
+
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});

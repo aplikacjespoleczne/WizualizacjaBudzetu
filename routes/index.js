@@ -3,10 +3,6 @@ var router = express.Router();
 var xml2json = require('node-xml2json');
 
 /* GET home page. */
-router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
-});
-
 router.get('/', function(req, res){
   var html = '<form method="post" enctype="multipart/form-data" action="/user">'+
       '<label for="username"><span>login</span><input type="text" name="username" id="username"></label><br/>'+
