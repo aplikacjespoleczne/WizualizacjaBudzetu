@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+// moved to app.js because MyDevliNet requires that server is started from app.js
+
+var debug = require('debug')('WizualizacjaBudzetu');
+var app = require('../app');
+
+app.set('port', process.env.PORT || 3000);
+
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});
