@@ -1,7 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var Converter = require('csvtojson').core.Converter;
-var fs = require('fs');
 var parseCSVFile = require('../csvParser');
 
 /* GET home page. */
