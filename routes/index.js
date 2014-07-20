@@ -29,9 +29,11 @@ router.post('/user', function(req, res) {
 });
 
 router.post('/file-upload', function(req, res) {
-   
+  
+  var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/"; 
   //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/" + req.files.inputxml.path;
-  parseCSVFile(req.files.inputcsv.path);
+  //name = "" || req.files.inputcsv.path;
+  parseCSVFile(filepath);
   res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/'>powrót</a></div>");
 
 });

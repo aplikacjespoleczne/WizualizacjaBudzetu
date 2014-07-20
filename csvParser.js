@@ -1,7 +1,7 @@
 var Converter = require('csvtojson').core.Converter;
 var fs = require('fs');
 
-function parseCSVFile(filepath) {
+exports.parseCSVFile = function(filepath) {
 
   var fileStream = fs.createReadStream(filepath);
   var param = {
@@ -96,4 +96,3 @@ function get_level3(main_hash, lev1_num, lev2_num) {
 }
 
 */
-module.exports = parseCSVFile();
