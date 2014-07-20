@@ -15,7 +15,6 @@
     "mongodb": "^1.4.7",
     "morgan": "~1.0.0",
     "multer": "^0.1.0",
-    //"node-xml2json": "^1.0.0",
     "static-favicon": "~1.0.0"
   }
 }
