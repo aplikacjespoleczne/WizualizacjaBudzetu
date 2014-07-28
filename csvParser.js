@@ -6,6 +6,7 @@ module.exports = function(filepath) {
 
   var fileStream = fs.createReadStream(filepath);
   var param = {
+    "delimiter": "\;",
     "quote": "\""
   };
   var csvConverter = new Converter(param);
@@ -37,15 +38,14 @@ module.exports = function(filepath) {
 
           for (var element in jsonObj) {
             //console.log(jsonObj[element]);
-            key = parseInt(jsonObj[element]['Dzial - numer']);
-       
+            key = parseInt(jsonObj[element]['Dział - numer']);
             if (level1_hash.hasOwnProperty(key)) {
-              level1_hash[key] = level1_hash[key] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(' ',''));
+              level1_hash[key] = level1_hash[key] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
             } else {
-              level1_hash[key] = parseInt((jsonObj[element]['Kwota [PLN]']).replace(' ',''));
+              level1_hash[key] = parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
             }    
           }
-
+          console.log(level1_hash);
           collection = db.collection("null:null");
           collection.remove({}, function(err, removed) {
             if (err) throw err;
@@ -58,20 +58,21 @@ module.exports = function(filepath) {
         },
         function(callback) {
           for (main_key in level1_hash) {
+            var level2_hash = {};
             if (main_key != "_id" ) {
-              var level2_hash = {};
               for (var element in jsonObj) {
-                if (parseInt(jsonObj[element]['Dzial - numer']) == main_key){
-                  key = parseInt(jsonObj[element]['Rozdzial - numer']);
-                  if (level2_hash.hasOwnProperty(main_key)) {
-                    level2_hash[key] = level2_hash[key] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(' ',''));
+                if (parseInt(jsonObj[element]['Dział - numer']) == main_key){
+                  key = parseInt(jsonObj[element]['Rozdział - numer']);
+                  if (level2_hash.hasOwnProperty(key)) {
+                    level2_hash[key] = level2_hash[key] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
                   } else {
-                    level2_hash[key] = parseInt((jsonObj[element]['Kwota [PLN]']).replace(' ',''));
+                    level2_hash[key] = parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
                   }
                 }
               }
               name = main_key + ":null";
-              //console.log(name);
+              console.log(main_key + " ----------------------");
+              console.log(level2_hash);
               collection = db.collection(name);
               collection.insert(level2_hash, function(err, result) {
                 if (err) throw err;
