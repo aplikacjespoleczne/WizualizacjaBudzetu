@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var xml2json = require('node-xml2json');
-var fs = require('fs');
+var parseCSVFile = require('../csvParser');
+var AmountProvider = require('../amountProvider').AmountProvider;
+var amountProvider = new AmountProvider();
 
 /* GET home page. */
 router.get('/', function(req, res){
@@ -21,7 +22,7 @@ router.post('/user', function(req, res) {
     res.send("<div>Wprowadzono błędne dane.</div><div><a href='/'>powrót</a></div>");
   } else {
     var html = '<form method="post" enctype="multipart/form-data" action="/file-upload">'+
-        '<label for="inputxml"><span>wprowadź plik</span><input type="file" name="inputxml" id="inputxml"></label><br/><br/>'+
+        '<label for="inputcsv"><span>wprowadź plik</span><input type="file" name="inputcsv" id="inputcsv"></label><br/><br/>'+
         '<input type="submit" value="KLIK">'+
         '</form>';
     
@@ -30,28 +31,42 @@ router.post('/user', function(req, res) {
 });
 
 router.post('/file-upload', function(req, res) {
-   
-  //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/" + req.files.inputxml.path;
-  var filepath = req.files.inputxml.path;
   
-  fs.readFile(filepath, 'utf8', function (err, data) {
-    var parsed = xml2json.parser(data);//,'','html'
-    //var document = JSON.stringify(parsed);
-    var inside = parsed.dokumentplanistyczny.zalaczniki.wydatki.pozycja;
-    
-    var MongoClient = require('mongodb').MongoClient, format = require('util').format;
-    MongoClient.connect('mongodb://mo14248_wiz_budz:kdpWizualizujeBudzet123@mongo0.mydevil.net:27017/mo14248_wiz_budz', function(err, db) {
-      if (err) throw err;
-      var testCollection = db.collection('test');
-      testCollection.remove({}, function(err, removed) {
-        testCollection.insert(inside, function(err, result) {
-          if (err) throw err;
-          db.close();
-        });
-      });
-    });
-    res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/'>powrót</a></div>");
-  });
+  //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/"; 
+  //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/" + req.files.inputxml.path;
+  //name = "" || ;
+  parseCSVFile(req.files.inputcsv.path);
+  res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/'>powrót</a></div>");
+
+});
+
+///////////////////////////////getters
+router.get('/get', function(req, res) {
+	amountProvider.find(null, null, function(error, results) {
+		if (error) {
+			throw error;
+		}
+		res.json(results);	
+	});
+});
+
+router.get('/get/:first', function(req, res) {
+	amountProvider.find(req.params.first, null, function(error, results) {
+		if (error) {
+			throw error;
+		}
+		res.json(results);	
+	});
+});
+
+router.get('/get/:first/:second', function(req, res) {
+	amountProvider.find(req.params.first, req.params.second, function(error, results) {
+		if (error) {
+			throw error;
+		}
+		res.json(results);	
+	});
 });
 
 module.exports = router;
+
