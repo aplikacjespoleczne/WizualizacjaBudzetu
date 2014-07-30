@@ -97,16 +97,18 @@ module.exports = function(filepath) {
                 if (err) throw err;
               });
               for (var l2_key in level2_hash){
-                async_level3(jsonObj, main_key, l2_key, function(level3_hash, main_key, l2_key){
-                  
-                  name = main_key + ":" + l2_key;
-                  console.log(main_key + " - " + l2_key);
-                  console.log(level3_hash);
-                  collection = db.collection(name);
-                  collection.insert(level3_hash, function(err, result) {
-                    if (err) throw err;
-                  }); 
-                });
+                if (l2_key != "_id" ) {                
+                  async_level3(jsonObj, main_key, l2_key, function(level3_hash, main_key, l2_key){
+                    
+                    name = main_key + ":" + l2_key;
+                    console.log(main_key + " - " + l2_key);
+                    console.log(level3_hash);
+                    collection = db.collection(name);
+                    collection.insert(level3_hash, function(err, result) {
+                      if (err) throw err;
+                    }); 
+                  });
+                }
               }                     
             }
           }
