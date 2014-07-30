@@ -14,7 +14,7 @@ module.exports = function(filepath) {
 
   fileStream.pipe(csvConverter);
 
-  var async_level3 = function(jsonObj, db, main_key, sec_key, callback) {
+  var async_level3 = function(jsonObj, main_key, sec_key, callback) {
     process.nextTick(function(){
       var level3_hash = {};
       for (var element in jsonObj) {
@@ -29,7 +29,7 @@ module.exports = function(filepath) {
           }
         }
       }
-      callback(level3_hash);
+      callback(level3_hash, main_key, sec_key);
     });
   };
 
@@ -97,7 +97,7 @@ module.exports = function(filepath) {
                 if (err) throw err;
               });
               for (var l2_key in level2_hash){
-                async_level3(jsonObj, db, main_key, l2_key, function(level3_hash){
+                async_level3(jsonObj, main_key, l2_key, function(level3_hash, main_key, l2_key){
                   
                   name = main_key + ":" + l2_key;
                   console.log(main_key + " - " + l2_key);
