@@ -76,11 +76,27 @@ module.exports = function(filepath) {
               collection = db.collection(name);
               collection.insert(level2_hash, function(err, result) {
                 if (err) throw err;
-              });         
+              });
+              for (var l2_key in level2_hash){
+                var level3_hash = {};
+                for (var element in jsonObj) {
+                  if (parseInt(jsonObj[element]['Dział - numer']) == main_key){
+                    if (parseInt(jsonObj[element]['Rozdział - numer']) == l2_key) {
+                      key = parseInt(jsonObj[element]['Zadanie - numer']);
+                      if (level3_hash.hasOwnProperty(key)) {
+                        console.log("Real shit!!!!!!!!!!!!!!!!!!!!!")
+                      } else {
+                        level3_hash[key] = parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+                      }                      
+                    }
+                  }
+                }
+                console.log(level3_hash);
+              }        
             }
           }
           callback(null, 3);
-          console.log("DONE");
+          console.log("DONE!");
         }
       ], function(error, results) {
         console.log(results); 
