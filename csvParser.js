@@ -99,8 +99,8 @@ module.exports = function(filepath) {
               for (var l2_key in level2_hash){
                 async_level3(jsonObj, db, main_key, l2_key, function(level3_hash){
                   
-                  name = main_key + ":" + l2_key_key;
-                  console.log(main_key + " ----------------------");
+                  name = main_key + ":" + l2_key;
+                  console.log(main_key + " - " + l2_key);
                   console.log(level3_hash);
                   collection = db.collection(name);
                   collection.insert(level3_hash, function(err, result) {
