@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var parseCSVFile = require('../csvParser');
+var config = require('../config');
 
 /* GET home page. */
 router.get('/', function(req, res){
+  console.log(config.mongo);
   var html = '<form method="post" enctype="multipart/form-data" action="/user">'+
       '<label for="username"><span>login</span><input type="text" name="username" id="username"></label><br/>'+
       '<label for="password"><span>hasło</span><input type="password" name="password" id="password"></label><br/><br/>'+
