@@ -1,8 +1,10 @@
 var Converter = require('csvtojson').core.Converter;
 var fs = require('fs');
 var async = require("async");
+var config = require('./config');
+var MongoClient = require('mongodb').MongoClient, format = require('util').format;
 
-module.exports = function(filepath) {
+var parse = function(filepath) {
 
   var fileStream = fs.createReadStream(filepath);
   var param = {
@@ -37,8 +39,7 @@ module.exports = function(filepath) {
     
     var key;
     
-    var MongoClient = require('mongodb').MongoClient, format = require('util').format;
-    MongoClient.connect('mongodb://mo14248_wiz_budz:kdpWizualizujeBudzet123@mongo0.mydevil.net:27017/mo14248_wiz_budz', function(err, db) {
+    MongoClient.connect(config.MONGO, function(err, db) {
      
       async.series([
         function(callback){
@@ -129,28 +130,16 @@ module.exports = function(filepath) {
   });
 }
 
-/*  
-Seems not needed but let's wait a while to see 
-function get_level3(main_hash, lev1_num, lev2_num) {
-
-  var level3_hash = {};
-
-  for (var element in main_hash) {
-    if (parseInt(main_hash[element]['Dzial - numer']) == lev1_num){
-      if (parseInt(main_hash[element]['Rozdzial - numer']) == lev2_num){
-        key = parseInt(main_hash[element]['Zadanie - numer']);
-        if (level3_hash.hasOwnProperty(key)) {
-          level3_hash[key] = level3_hash[key] + parseInt((main_hash[element]['Kwota [PLN]']).replace(' ',''));
-        } else {
-          level3_hash[key] = parseInt((main_hash[element]['Kwota [PLN]']).replace(' ',''));
-        }
-      }
-    }
-  }
-  console.log(lev1_num, ' ', lev2_num);
-  console.log('-----------------------------------------------------------------------------');
-  console.log(level3_hash);
-  console.log('-----------------------------------------------------------------------------');
+var cleanDB = function() {
+  MongoClient.connect(config.MONGO, function(err, db) {
+    db.collectionNames(function(err, collections) {
+      collections.forEach(function(c){
+        var name = c.name.substring(config.DBNAME.length + 1);
+        db.dropCollection(name);
+      });     
+    });
+  });
 }
 
-*/
+exports.parse = parse;
+exports.cleanDB = cleanDB;

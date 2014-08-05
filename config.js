@@ -12,9 +12,12 @@ if (process.env.LOGNAME == 'aplikacje') {
 	config.db_port = '27017'
 }
 
-config.mongo = 'mongodb://' + config.db_user + ':' 
+config.DBNAME = 'mo14248_wiz_budz';
+
+config.MONGO = 'mongodb://' + config.db_user + ':' 
                        		+ config.db_pass + '@' 
                        		+ config.db_host + ':' 
-                       		+ config.db_port + '/mo14248_wiz_budz';
+                       		+ config.db_port + '/'
+                       		+ config.DBNAME;
 
 module.exports = config;
