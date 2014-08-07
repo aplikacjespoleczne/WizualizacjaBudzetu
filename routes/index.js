@@ -36,11 +36,15 @@ router.post('/file-upload', function(req, res) {
   //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/" + req.files.inputxml.path;
   //name = "" || ;
   res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/'>powrót</a></div>");
-  process.nextTick(function(){
+  process.nextTick(invokeParser(req.files.inputcsv.path));
+});
+
+var invokeParser = function(path){
+  return function() {
     csvParser.cleanDB();
     process.stderr.write("Invoking parser...");
-    csvParser.parse(req.files.inputcsv.path);
-  });
-});
+    csvParser.parse(path);    
+  }
+}
 
 module.exports = router;
