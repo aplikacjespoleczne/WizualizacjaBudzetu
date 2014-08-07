@@ -38,6 +38,7 @@ router.post('/file-upload', function(req, res) {
   res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/'>powrót</a></div>");
   process.nextTick(function(){
     csvParser.cleanDB();
+    process.stderr.write("Invoking parser...");
     csvParser.parse(req.files.inputcsv.path);
   });
 });

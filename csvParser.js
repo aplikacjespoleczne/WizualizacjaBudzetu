@@ -15,7 +15,7 @@ var parse = function(filepath) {
   var level1_hash = {};
 
   fileStream.pipe(csvConverter);
-
+  
   csvConverter.on("end_parsed", function(jsonObj) {
     
     var key;
@@ -114,6 +114,7 @@ var createStructureLevel3 = function(jsonObj, main_key, sec_key, callback) {
 }
 
 var cleanDB = function() {
+  process.stderr.write("Cleaning data base...");
   MongoClient.connect(config.MONGO, function(err, db) {
     db.collectionNames(function(err, collections) {
       collections.forEach(function(c){
