@@ -114,13 +114,14 @@ var createStructureLevel3 = function(jsonObj, main_key, sec_key, callback) {
 }
 
 var cleanDB = function() {
-  process.stderr.write("Cleaning data base...");
+  process.stderr.write("Cleaning data base...........");
   MongoClient.connect(config.MONGO, function(err, db) {
     db.collectionNames(function(err, collections) {
       collections.forEach(function(c){
         var name = c.name.substring(config.DBNAME.length + 1);
         db.dropCollection(name);
-      });     
+      });
+      process.stderr.write("done\n");    
     });
   });
 }
