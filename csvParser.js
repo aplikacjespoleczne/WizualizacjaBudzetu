@@ -24,21 +24,29 @@ var parse = function(filepath) {
      
       async.series([
         function(callback){
-          process.stderr.write("STEP 1\n");
+          cleanDB(function(){
+            callback(null, 1);
+          });
+        },
+        function(callback){
+          process.stderr.write("Injecting pure data into database..........");
           collection = db.collection("main");
           collection.insert(jsonObj, function(){
-            callback(null, 1);
+            process.stderr.write("done\n");
+            callback(null, 2);
           });        
         },
         function(callback){
-          process.stderr.write("STEP 2\n");
+          process.stderr.write("Creating 1st level of structure..........");
           createStructureLevel1(jsonObj, function(result_hash){
             level1_hash = result_hash;
             injectDatabase(db, "null:null", level1_hash);
-            callback(null, 2);            
+            process.stderr.write("done\n");
+            callback(null, 3);            
           });
         },
         function(callback) {
+          process.stderr.write("Creating 2nd and 3rd level of structure..........");
           for (main_key in level1_hash) {
             if (main_key != "_id" ) {
               key1 = main_key;
@@ -58,8 +66,8 @@ var parse = function(filepath) {
               }));
             }
           }
-          callback(null, 3); 
-          console.log("DONE!");
+          process.stderr.write("done\n");
+          callback(null, 4); 
         }
       ], function(error, results) {
         console.log(results); 
@@ -113,7 +121,7 @@ var createStructureLevel3 = function(jsonObj, main_key, sec_key, callback) {
   }
 }
 
-var cleanDB = function() {
+var cleanDB = function(callback) {
   process.stderr.write("Cleaning data base...........");
   MongoClient.connect(config.MONGO, function(err, db) {
     db.collectionNames(function(err, collections) {
@@ -121,7 +129,8 @@ var cleanDB = function() {
         var name = c.name.substring(config.DBNAME.length + 1);
         db.dropCollection(name);
       });
-      process.stderr.write("done\n");    
+      process.stderr.write("done\n");
+      callback();
     });
   });
 }
@@ -138,4 +147,3 @@ var injectDatabase = function(db, name, hash) {
 }
 
 exports.parse = parse;
-exports.cleanDB = cleanDB;
