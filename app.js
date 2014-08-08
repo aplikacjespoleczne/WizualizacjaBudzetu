@@ -36,6 +36,7 @@ app.use(multer({
   },
   onError: function (error, next) {
     process.stderr.write('ERROR durign UPLOAD: ' + error);
+    next(error);
     }
 }));
 
