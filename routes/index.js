@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var parseCSVFile = require('../csvParser');
+var csvParser = require('../csvParser');
+var config = require('../config');
 var AmountProvider = require('../amountProvider').AmountProvider;
 var amountProvider = new AmountProvider();
 var d3 = require('d3');
@@ -8,6 +9,7 @@ var jsdom = require('jsdom');
 
 /* GET home page. */
 router.get('/', function(req, res){
+  //console.log(config.MONGO);
   var html = '<form method="post" enctype="multipart/form-data" action="/user">'+
       '<label for="username"><span>login</span><input type="text" name="username" id="username"></label><br/>'+
       '<label for="password"><span>hasło</span><input type="password" name="password" id="password"></label><br/><br/>'+
@@ -37,10 +39,10 @@ router.post('/file-upload', function(req, res) {
   //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/"; 
   //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/" + req.files.inputxml.path;
   //name = "" || ;
-	res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/'>powrót</a></div>");
-	process.nextTick(function(){
-		parseCSVFile(req.files.inputcsv.path);
-	});
+
+  res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/'>powrót</a></div>");
+  process.stderr.write("DEBUG Invoking callback function\n");
+  process.nextTick(invokeParser(req.files.inputcsv.path));
 });
 
 ///////////////////////////////getters
@@ -117,5 +119,13 @@ router.get('/chart-test', function(req, res) {
 		});
 	}});
 });
+
+var invokeParser = function(path){
+  return function() {
+    process.stderr.write("DEBUG " + path + "\n");
+    process.stderr.write("Invoking parser...\n");
+    csvParser.parse(path);
+  }
+}
 
 module.exports = router;

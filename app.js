@@ -27,8 +27,20 @@ app.use(multer({
   dest: './uploads/',
   rename: function (fieldname, filename) {
     return filename.replace(/\W+/g, '-').toLowerCase();
-  }
+  },
+  onFileUploadStart: function (file) {
+    process.stderr.write('Uploading file..........');
+  },
+  onFileUploadComplete: function (file) {
+    process.stderr.write('done\n');
+  },
+  onError: function (error, next) {
+    process.stderr.write('ERROR durign UPLOAD: ' + error);
+    next(error);
+    }
 }));
+
+
 
 app.use('/', routes);
 
