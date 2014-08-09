@@ -4,7 +4,6 @@ var parseCSVFile = require('../csvParser');
 var AmountProvider = require('../amountProvider').AmountProvider;
 var amountProvider = new AmountProvider();
 var d3 = require('d3');
-var fs = require('fs');
 var jsdom = require('jsdom');
 
 /* GET home page. */
@@ -38,9 +37,10 @@ router.post('/file-upload', function(req, res) {
   //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/"; 
   //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/" + req.files.inputxml.path;
   //name = "" || ;
-  parseCSVFile(req.files.inputcsv.path);
-  res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/'>powrót</a></div>");
-
+	res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/'>powrót</a></div>");
+	process.nextTick(function(){
+		parseCSVFile(req.files.inputcsv.path);
+	});
 });
 
 ///////////////////////////////getters
@@ -71,7 +71,6 @@ router.get('/get/:first/:second', function(req, res) {
 	});
 });
 
-///////////////////////d3
 router.get('/chart', function(req, res) {
 	amountProvider.findTest(function(error, results) {
 		if (error) {
@@ -120,4 +119,3 @@ router.get('/chart-test', function(req, res) {
 });
 
 module.exports = router;
-
