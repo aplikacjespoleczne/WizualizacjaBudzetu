@@ -81,9 +81,13 @@ var createStructureLevel1 = function(jsonObj, callback) {
   for (var element in jsonObj) {
     key = parseInt(jsonObj[element]['Dział - numer']);
     if (result_hash.hasOwnProperty(key)) {
-      result_hash[key] = result_hash[key] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+      result_hash[key]["value"] = result_hash[key]["value"] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
     } else {
-      result_hash[key] = parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+      result_hash[key] = {
+        "id": key,
+        "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
+        "description" : jsonObj[element]["Zadanie - nazwa"]
+      }
     }
   }
   callback(result_hash);
@@ -96,9 +100,13 @@ var createStructureLevel2 = function(jsonObj, main_key, callback){
       if (parseInt(jsonObj[element]['Dział - numer']) == main_key){
         key = parseInt(jsonObj[element]['Rozdział - numer']);
         if (result_hash.hasOwnProperty(key)) {
-          result_hash[key] = result_hash[key] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+          result_hash[key]["value"] = result_hash[key]["value"] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
         } else {
-          result_hash[key] = parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+          result_hash[key] = {
+            "id": key,
+            "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
+            "description" : jsonObj[element]["Zadanie - nazwa"]
+          }
         }
       }
     }
@@ -113,7 +121,11 @@ var createStructureLevel3 = function(jsonObj, main_key, sec_key, callback) {
       if (parseInt(jsonObj[element]['Dział - numer']) == main_key){
         if (parseInt(jsonObj[element]['Rozdział - numer']) == sec_key) {
           key = parseInt(jsonObj[element]['Zadanie - numer']);
-          result_hash[key] = parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+          result_hash[key] = {
+            "id": key,
+            "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
+            "description" : jsonObj[element]["Zadanie - nazwa"]
+          }          
         }
       }
     }
@@ -138,9 +150,7 @@ var cleanDB = function(callback) {
 var injectDatabase = function(db, name, hash) {
   collection = db.collection(name);
   for (var key in hash) {
-    var row = {};
-    row[key] = hash[key];
-    collection.insert(row, function(err, result) {
+    collection.insert(hash[key], function(err, result) {
       if (err) throw err;
     });
   }
