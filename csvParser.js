@@ -70,7 +70,7 @@ var parse = function(filepath) {
           callback(null, 4); 
         }
       ], function(error, results) {
-        console.log(results); 
+        process.stderr.write("Creating of structure finished.\n"); 
       });  
     }); 
   });

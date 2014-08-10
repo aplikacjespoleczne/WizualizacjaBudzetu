@@ -8,9 +8,9 @@ var d3 = require('d3');
 var jsdom = require('jsdom');
 
 /* GET home page. */
-router.get('/', function(req, res){
+router.get('/admin', function(req, res){
   //console.log(config.MONGO);
-  var html = '<form method="post" enctype="multipart/form-data" action="/user">'+
+  var html = '<form method="post" enctype="multipart/form-data" action="/admin">'+
       '<label for="username"><span>login</span><input type="text" name="username" id="username"></label><br/>'+
       '<label for="password"><span>hasło</span><input type="password" name="password" id="password"></label><br/><br/>'+
       '<input type="submit" value="KLIK">'+
@@ -19,13 +19,13 @@ router.get('/', function(req, res){
   res.send(html);
 });
 
-router.post('/user', function(req, res) {
+router.post('/admin', function(req, res) {
   if (req.body.username != 'admin' || req.body.password != 'admin123') {
     var aaa = req.body.username;
     var bbb = req.body.password;
     res.send("<div>Wprowadzono błędne dane.</div><div><a href='/'>powrót</a></div>");
   } else {
-    var html = '<form method="post" enctype="multipart/form-data" action="/file-upload">'+
+    var html = '<form method="post" enctype="multipart/form-data" action="/admin/file-upload">'+
         '<label for="inputcsv"><span>wprowadź plik</span><input type="file" name="inputcsv" id="inputcsv"></label><br/><br/>'+
         '<input type="submit" value="KLIK">'+
         '</form>';
@@ -34,7 +34,7 @@ router.post('/user', function(req, res) {
   }
 });
 
-router.post('/file-upload', function(req, res) {
+router.post('/admin/file-upload', function(req, res) {
   
   //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/"; 
   //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/" + req.files.inputxml.path;
