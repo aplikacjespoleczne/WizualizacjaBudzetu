@@ -139,7 +139,9 @@ var cleanDB = function(callback) {
     db.collectionNames(function(err, collections) {
       collections.forEach(function(c){
         var name = c.name.substring(config.DBNAME.length + 1);
-        db.dropCollection(name);
+        if (name != "users") {
+          db.dropCollection(name);
+        }
       });
       process.stderr.write("done\n");
       callback();

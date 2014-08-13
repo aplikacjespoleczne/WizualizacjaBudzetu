@@ -6,6 +6,7 @@ var AmountProvider = require('../amountProvider').AmountProvider;
 var amountProvider = new AmountProvider();
 var d3 = require('d3');
 var jsdom = require('jsdom');
+var MongoClient = require('mongodb').MongoClient;
 
 /* GET home page. */
 router.get('/admin', function(req, res){
@@ -20,18 +21,27 @@ router.get('/admin', function(req, res){
 });
 
 router.post('/admin', function(req, res) {
-  if (req.body.username != 'admin' || req.body.password != 'admin123') {
-    var aaa = req.body.username;
-    var bbb = req.body.password;
-    res.send("<div>Wprowadzono błędne dane.</div><div><a href='/'>powrót</a></div>");
-  } else {
-    var html = '<form method="post" enctype="multipart/form-data" action="/admin/file-upload">'+
-        '<label for="inputcsv"><span>wprowadź plik</span><input type="file" name="inputcsv" id="inputcsv"></label><br/><br/>'+
-        '<input type="submit" value="KLIK">'+
-        '</form>';
-    
-    res.send(html);
-  }
+
+  MongoClient.connect(config.MONGO, function(error, db) {
+  	if (error) {
+  	  res.send("<div>Wystąpił błąd serwera. Spróbuj póżniej.</div><div><a href='/admin'>powrót</a></div>");
+  	}
+
+  	users = db.collection("users");
+  	users.find().toArray(function(error, admin_data){
+
+  	  if ((req.body.username != admin_data[0]["user"]) || (req.body.password != admin_data[0]["password"])) {
+  	    res.send("<div>Wprowadzono błędne dane.</div><div><a href='/admin'>powrót</a></div>");
+  	  } else {
+  	    var html = '<form method="post" enctype="multipart/form-data" action="/admin/file-upload">'+
+                   '<label for="inputcsv"><span>wprowadź plik</span><input type="file" name="inputcsv" id="inputcsv"></label><br/><br/>'+
+  		   	       '<input type="submit" value="KLIK">'+
+  			       '</form>';
+  			  
+  	    res.send(html);
+  	  }  	
+  	});
+  });
 });
 
 router.post('/admin/file-upload', function(req, res) {
@@ -40,7 +50,7 @@ router.post('/admin/file-upload', function(req, res) {
   //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/" + req.files.inputxml.path;
   //name = "" || ;
 
-  res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/'>powrót</a></div>");
+  res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/admin'>powrót</a></div>");
   process.stderr.write("DEBUG Invoking callback function\n");
   process.nextTick(invokeParser(req.files.inputcsv.path));
 });
