@@ -9,6 +9,10 @@ var jsdom = require('jsdom');
 var MongoClient = require('mongodb').MongoClient;
 
 /* GET home page. */
+router.get('/', function(req, res){
+	res.render('index', {title: 'Wizualizacja Budżetu Miejskiego'});
+});
+
 router.get('/admin', function(req, res){
   //console.log(config.MONGO);
   var html = '<form method="post" enctype="multipart/form-data" action="/admin">'+

@@ -4,4 +4,11 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content
+    header
+      #title
+        h1= title
+      #search
+        input(type='text' value='search' onclick="if (this.defaultValue==this.value) this.value=''")
+        input(type='submit' value='ok')
+    #content
+      block content
