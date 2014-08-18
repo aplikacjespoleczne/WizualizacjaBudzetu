@@ -24,45 +24,67 @@ header {
 }
 
 #search {
+	width: 350px;
 	font-size: 1.6em;
 	font-weight: bold;
 	padding: 10px;
 	float: right;
-	margin-right: 10px;
 }
 
 #search input[type=text]{
+	width: 300px;
 	text-indent: 5px;
 	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-	font-weight: bold;
 	font-size: 1em;
 	border-radius: 3px;
 	border: 1px solid;
-	margin-left: 2px;
-	margin-right: 2px;
 	letter-spacing: .025em;
+	float: left;
 }
 
 #search input[type=submit]{
+	width: 40px;
 	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 	font-weight: bold;
 	font-size: 1em;
 	border-radius: 3px;
-	margin-left: 2px;
-	margin-right: 2px;
-}
-
-#search input[type=submit]{
-	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-	font-weight: bold;
-	font-size: 1em;
-	border-radius: 3px;
-	margin-left: 2px;
-	margin-right: 2px;
+	float: right;
 }
 
 #content {
 	padding: 10px;
 	margin: 0 auto;
 	margin-left: 10px;
+}
+
+#scrollable-dropdown-menu {
+	width: 300px;
+	display: inline;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint,
+.tt-dropdown-menu {
+  width: 300px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+}
+
+.typeahead:focus {
+  border: 2px solid #0052a4;
+}
+
+.tt-suggestion {
+  font-size: 1em;
+  font-weight: normal;
+  line-height: 24px;
+}
+
+.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: #0052a4;
 }
