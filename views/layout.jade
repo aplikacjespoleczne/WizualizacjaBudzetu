@@ -40,10 +40,18 @@ html
   body
     header
       #title
-        h1= title
+        h1 Wizualizacja Budżetu Miejskiego
       #search
         #scrollable-dropdown-menu
           input(class='typeahead' type='text' value='search' onclick="if (this.defaultValue==this.value) this.value=''")
         input(type='submit' value='ok')
     #content
       block content
+    footer
+      #footer-container
+        div()
+          div(): a(href='regulamin') Regulamin
+          div(): a(href='autorzy') Autorzy
+          div(): a(href='kdp_lodz') KdP Łódź
+          div(): a(href='faq') FAQ
+          div(): a(href='Kontakt') Kontakt

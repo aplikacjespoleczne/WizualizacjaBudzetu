@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+  form(method="post" enctype="multipart/form-data" action="/admin/admin")
+    #username
+      | Login  
+      input(type='text' name='username')
+    #password  
+      | Hasło
+      input(type='text' name='password')
+    input(type='submit' value='KLIK')

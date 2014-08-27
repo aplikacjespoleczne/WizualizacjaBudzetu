@@ -10,53 +10,57 @@ var MongoClient = require('mongodb').MongoClient;
 
 /* GET home page. */
 router.get('/', function(req, res){
-	res.render('index', {title: 'Wizualizacja Budżetu Miejskiego'});
+	res.render('index');
 });
 
 router.get('/admin', function(req, res){
-  //console.log(config.MONGO);
-  var html = '<form method="post" enctype="multipart/form-data" action="/admin">'+
-      '<label for="username"><span>login</span><input type="text" name="username" id="username"></label><br/>'+
-      '<label for="password"><span>hasło</span><input type="password" name="password" id="password"></label><br/><br/>'+
-      '<input type="submit" value="KLIK">'+
-      '</form>';
-               
-  res.send(html);
+  res.render('admin/admin');
 });
 
-router.post('/admin', function(req, res) {
+router.post('/admin/admin', function(req, res) {
 
   MongoClient.connect(config.MONGO, function(error, db) {
   	if (error) {
-  	  res.send("<div>Wystąpił błąd serwera. Spróbuj póżniej.</div><div><a href='/admin'>powrót</a></div>");
+  		res.render('admin/error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
+  		return; 
   	}
-
-  	users = db.collection("users");
+	users = db.collection("users");
   	users.find().toArray(function(error, admin_data){
 
-  	  if ((req.body.username != admin_data[0]["user"]) || (req.body.password != admin_data[0]["password"])) {
-  	    res.send("<div>Wprowadzono błędne dane.</div><div><a href='/admin'>powrót</a></div>");
-  	  } else {
-  	    var html = '<form method="post" enctype="multipart/form-data" action="/admin/file-upload">'+
-                   '<label for="inputcsv"><span>wprowadź plik</span><input type="file" name="inputcsv" id="inputcsv"></label><br/><br/>'+
-  		   	       '<input type="submit" value="KLIK">'+
-  			       '</form>';
-  			  
-  	    res.send(html);
-  	  }  	
+  		if ((req.body.username != admin_data[0]["user"]) || (req.body.password != admin_data[0]["password"])) {
+   			res.render('admin/error',{message: 'Wprowadzono błędne dane.'});
+  			return;  	    	
+  		} else {
+  			res.render('admin/file-upload');
+  	  	}  	
   	});
   });
 });
 
 router.post('/admin/file-upload', function(req, res) {
-  
-  //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/"; 
-  //var filepath = "/usr/home/aplikacje/domains/test.aplikacje.mydevil.net/public_nodejs/" + req.files.inputxml.path;
-  //name = "" || ;
+	res.render('admin/file-uploaded');
+  	process.stderr.write("DEBUG Invoking callback function\n");
+  	process.nextTick(invokeParser(req.files.inputcsv.path));
+});
 
-  res.send("<div>Poprawnie zuploadowano plik</div><div><a href='/admin'>powrót</a></div>");
-  process.stderr.write("DEBUG Invoking callback function\n");
-  process.nextTick(invokeParser(req.files.inputcsv.path));
+router.get('/autorzy', function(req, res){
+	res.render('autorzy', { title: 'Autorzy'});
+});
+
+router.get('/regulamin', function(req, res){
+	res.render('regulamin', { title: 'Regulamin'});
+});
+
+router.get('/kdp_lodz', function(req, res){
+	res.render('kdp_lodz', { title: 'Kdp Łódź'});
+});
+
+router.get('/faq', function(req, res){
+	res.render('faq', { title: 'FAQ'});
+});
+
+router.get('/kontakt', function(req, res){
+	res.render('kontakt', { title: 'Kontakt'});
 });
 
 ///////////////////////////////getters
