@@ -2,6 +2,56 @@ doctype html
 html
   head
     title= title
+    script(src='http://code.jquery.com/jquery-1.11.1.min.js')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    script(type='text/javascript' src='/javascripts/typeahead.bundle.js')
+    script(type='text/javascript' src='/javascripts/typeahead.bundle.min.js')
+    script(type='text/javascript' src='/javascripts/typeahead.jquery.js')
+    script(type='text/javascript').
+      $(document).ready(function(){
+        var local = ["html","javascript","java","erlang","ebola"];
+        var matcher = function(input) {
+          return function findMatches(q, cb){
+            var matches, substrRegex;
+
+            matches = [];
+
+            substrRegex = new RegExp(q, 'i');
+
+            $.each(input, function(i, str){
+              if (substrRegex.test(str)) {
+                matches.push({ value: str});
+              }
+            });
+            cb(matches);
+          };
+        }
+        $('.typeahead').typeahead({
+          minLength: 1,
+          highlight: true
+          hint: true
+        },
+        {
+          name: 'suggestions',
+          displayKey: 'value',
+          source: matcher(local)
+        });
+      });
   body
-    block content
+    header
+      #title
+        h1 Wizualizacja Budżetu Miejskiego
+      #search
+        #scrollable-dropdown-menu
+          input(class='typeahead' type='text' value='search' onclick="if (this.defaultValue==this.value) this.value=''")
+        input(type='submit' value='ok')
+    #content
+      block content
+    footer
+      #footer-container
+        div()
+          div(): a(href='regulamin') Regulamin
+          div(): a(href='autorzy') Autorzy
+          div(): a(href='kdp_lodz') KdP Łódź
+          div(): a(href='faq') FAQ
+          div(): a(href='Kontakt') Kontakt
