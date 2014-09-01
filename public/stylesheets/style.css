@@ -57,6 +57,10 @@ header {
 	margin-left: 10px;
 }
 
+#content ol{
+	-webkit-padding-start: 2em;
+}
+
 #scrollable-dropdown-menu {
 	width: 300px;
 	display: inline;

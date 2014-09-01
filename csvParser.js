@@ -68,12 +68,99 @@ var parse = function(filepath) {
           }
           process.stderr.write("done\n");
           callback(null, 4); 
-        }
+        },
+        function(callback) {
+          process.stderr.write("Creating search department level of structure..........");
+          createStructureLevel0(jsonObj, function(result_hash){
+            level0_hash = result_hash;
+            injectDatabase(db, "departmentSearch", level0_hash);
+            process.stderr.write("done\n");
+            callback(null, 5);            
+          });      
+        },
+        function(callback) {
+          process.stderr.write("Creating search division level of structure..........");
+          createDivisionSearchCollection(jsonObj, function(result_hash){
+            chapter_search_hash = result_hash;
+            injectDatabase(db, "divisionSearch", chapter_search_hash);
+            process.stderr.write("done\n");
+            callback(null, 6);            
+          });      
+        },
+        function(callback) {
+          process.stderr.write("Creating search chapter level of structure..........");
+          createChapterSearchCollection(jsonObj, function(result_hash){
+            chapter_search_hash = result_hash;
+            injectDatabase(db, "chapterSearch", chapter_search_hash);
+            process.stderr.write("done\n");
+            callback(null, 7);            
+          });      
+        },        
+        function(callback) {
+          process.stderr.write("Indexing text fields in the main collection of DB...");
+          collection = db.collection("main");
+          collection.ensureIndex({
+            "Wydział": "text",
+            "Dział - nazwa": "text",
+            "Rozdział - nazwa": "text",
+            "Zadanie - nazwa": "text",
+            "Opis zadania": "text"
+          }, function(){
+            process.stderr.write("done\n");
+            callback(null, 8);
+          });
+        },
+        function(callback) {
+          process.stderr.write("Indexing text fields in the department collection of DB...");
+          collection = db.collection("departmentSearch");
+          collection.ensureIndex({
+            "id": "text",
+          }, function(){
+            process.stderr.write("done\n");
+            callback(null, 9);
+          });
+        },
+        function(callback) {
+          process.stderr.write("Indexing text fields in the divisionSearch collection of DB...");
+          collection = db.collection("divisionSearch");
+          collection.ensureIndex({
+            "id": "text",
+          }, function(){
+            process.stderr.write("done\n");
+            callback(null, 10);
+          });
+        }, 
+        function(callback) {
+          process.stderr.write("Indexing text fields in the chapterSearch collection of DB...");
+          collection = db.collection("chapterSearch");
+          collection.ensureIndex({
+            "id": "text",
+          }, function(){
+            process.stderr.write("done\n");
+            callback(null, 11);
+          });
+        }        
       ], function(error, results) {
         process.stderr.write("Creating of structure finished.\n"); 
       });  
     }); 
   });
+}
+
+var createStructureLevel0 = function(jsonObj, callback) {
+  var result_hash = {};
+  for (var element in jsonObj) {
+    key = jsonObj[element]['Wydział'];
+    if (result_hash.hasOwnProperty(key)) {
+      result_hash[key]["value"] = result_hash[key]["value"] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+    } else {
+      result_hash[key] = {
+        "id": key,
+        "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''))
+      }
+    }
+  }
+  callback(result_hash);
 }
 
 var createStructureLevel1 = function(jsonObj, callback) {
@@ -86,7 +173,7 @@ var createStructureLevel1 = function(jsonObj, callback) {
       result_hash[key] = {
         "id": key,
         "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
-        "description" : jsonObj[element]["Zadanie - nazwa"]
+        "description" : jsonObj[element]["Dział - nazwa"]
       }
     }
   }
@@ -105,7 +192,7 @@ var createStructureLevel2 = function(jsonObj, main_key, callback){
           result_hash[key] = {
             "id": key,
             "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
-            "description" : jsonObj[element]["Zadanie - nazwa"]
+            "description" : jsonObj[element]["Rozdział - nazwa"]
           }
         }
       }
@@ -131,6 +218,41 @@ var createStructureLevel3 = function(jsonObj, main_key, sec_key, callback) {
     }
     callback(result_hash, main_key, sec_key);
   }
+}
+
+var createDivisionSearchCollection = function(jsonObj, callback) {
+  var result_hash = {};
+  for (var element in jsonObj) {
+    key = jsonObj[element]["Dział - nazwa"];
+    if (result_hash.hasOwnProperty(key)) {
+      result_hash[key]["value"] = result_hash[key]["value"] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+    } else {
+      result_hash[key] = {
+        "id": key,
+        "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
+        "department" : jsonObj[element]["Wydział"]
+      }
+    }
+  }
+  callback(result_hash);
+}
+
+var createChapterSearchCollection = function(jsonObj, callback) {
+  var result_hash = {};
+  for (var element in jsonObj) {
+    key = jsonObj[element]["Rozdział - nazwa"];
+    if (result_hash.hasOwnProperty(key)) {
+      result_hash[key]["value"] = result_hash[key]["value"] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+    } else {
+      result_hash[key] = {
+        "id": key,
+        "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
+        "department" : jsonObj[element]["Wydział"],
+        "division" : jsonObj[element]["Dział"]
+      }
+    }
+  }
+  callback(result_hash);
 }
 
 var cleanDB = function(callback) {

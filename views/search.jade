@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1 Wyszukiwanie Pozycji Budżetowych:
+  br
+  p Wyniki znalezione dla hasła '#{query}' (#{data.length})
+  br
+  if (data.length > 0)
+    ol
+      each val in data
+        if (val["type"] == "Nazwa zadania")
+          li #{val["Zadanie - nazwa"]} - #{val['Kwota [PLN]']} PLN
+        else
+          li #{val["id"]} - #{val['value']} PLN
+        | #{val["type"]}
+        br
+        br
+  else
+    p Nie znaleziono wyników
+  br
+  a(href='/'): p Strona Główna

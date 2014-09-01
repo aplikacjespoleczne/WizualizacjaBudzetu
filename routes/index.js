@@ -1,4 +1,5 @@
 var express = require('express');
+var async = require("async");
 var router = express.Router();
 var csvParser = require('../csvParser');
 var config = require('../config');
@@ -11,6 +12,72 @@ var MongoClient = require('mongodb').MongoClient;
 /* GET home page. */
 router.get('/', function(req, res){
 	res.render('index');
+});
+
+router.get('/query', function(req, res){
+  //console.log(req);
+  console.log(req.query.query);
+  //res.render('search', {query: req.query.query});
+  res.json({value:"kasza"});
+});
+
+router.post('/search', function(req, res){
+  console.log(req.body.query);
+  var search_results = [];
+  MongoClient.connect(config.MONGO, function(error, db) {
+    if (error) {
+      res.render('admin/error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
+      return; 
+    }
+    async.series([
+      function(callback){
+        main = db.collection("main");
+        main.find({$text: {$search: req.body.query }}).toArray(function(error, data){
+          data.map(function(element){
+            element["type"] = "Nazwa zadania";
+            search_results.push(element);
+          });
+          callback(null,1);
+        });
+      },
+      function(callback){
+        departments = db.collection("departmentSearch");
+        departments.find({$text: {$search: req.body.query }}).toArray(function(error, data){
+          data.map(function(element){
+            element["type"] = "Nazwa wydziału";
+            search_results.push(element);
+          });
+          callback(null,2);    
+        });        
+      },
+      function(callback){
+        division = db.collection("divisionSearch");
+        division.find({$text: {$search: req.body.query }}).toArray(function(error, data){
+          data.map(function(element){
+            element["type"] = "Nazwa działu";
+            search_results.push(element);
+          });
+          callback(null,3);    
+        });        
+      },
+      function(callback){
+        division = db.collection("chapterSearch");
+        division.find({$text: {$search: req.body.query }}).toArray(function(error, data){
+          data.map(function(element){
+            element["type"] = "Nazwa rozdziału";
+            search_results.push(element);
+          });
+          callback(null,4);    
+        });        
+      }
+    ], function(error, results){
+      console.log(search_results);
+      res.render('search', {
+        data: search_results, 
+        query: req.body.query
+      }); 
+    });
+  });
 });
 
 router.get('/admin', function(req, res){

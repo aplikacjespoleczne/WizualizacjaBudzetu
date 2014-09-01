@@ -7,44 +7,42 @@ html
     script(type='text/javascript' src='/javascripts/typeahead.bundle.js')
     script(type='text/javascript' src='/javascripts/typeahead.bundle.min.js')
     script(type='text/javascript' src='/javascripts/typeahead.jquery.js')
+    script(type='text/javascript' src='/javascripts/bloodhound.js')
     script(type='text/javascript').
       $(document).ready(function(){
-        var local = ["html","javascript","java","erlang","ebola"];
-        var matcher = function(input) {
-          return function findMatches(q, cb){
-            var matches, substrRegex;
-
-            matches = [];
-
-            substrRegex = new RegExp(q, 'i');
-
-            $.each(input, function(i, str){
-              if (substrRegex.test(str)) {
-                matches.push({ value: str});
-              }
-            });
-            cb(matches);
-          };
-        }
-        $('.typeahead').typeahead({
-          minLength: 1,
-          highlight: true
-          hint: true
-        },
-        {
-          name: 'suggestions',
-          displayKey: 'value',
-          source: matcher(local)
+        var suggestions = new Bloodhound({
+          datumTokenizer: function(data) {
+            return Bloodhound.tokenizers.obj.whitespace(d.val)
+          },
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          remote: {
+            url: 'http://localhost:8080/query?query=%QUERY',
+            filter: function(parsedResponse) {
+              console.log(parsedResponse);
+              var res = [{value:"kasza"}];
+              console.log(res);
+              return res;
+            }
+          }
         });
+        suggestions.initialize();
+        $('.typeahead').typeahead({
+          minLength: 3
+        }, 
+        {
+          displayKey: 'value',
+          source: suggestions.ttAdapter()
+        })
       });
   body
     header
       #title
-        h1 Wizualizacja Budżetu Miejskiego
+        h1 Budżet Miasta Łodzi
       #search
-        #scrollable-dropdown-menu
-          input(class='typeahead' type='text' value='search' onclick="if (this.defaultValue==this.value) this.value=''")
-        input(type='submit' value='ok')
+        form(method="post" enctype="multipart/form-data" action="/search")
+          #scrollable-dropdown-menu
+            input(class='typeahead' type='text' value='search' name='query' onclick="if (this.defaultValue==this.value) this.value=''")
+          input(type='submit' value='ok')
     #content
       block content
     footer
