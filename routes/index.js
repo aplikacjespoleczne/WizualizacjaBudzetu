@@ -34,42 +34,30 @@ router.post('/search', function(req, res){
         main = db.collection("main");
         main.find({$text: {$search: req.body.query }}).toArray(function(error, data){
           data.map(function(element){
-            element["type"] = "Nazwa zadania";
+            var index = element["Opis zadania"].indexOf(req.body.query);
+            if ( index != -1 ) {
+              element["id"] = element["Opis zadania"].substr(index).split(' ').slice(0,4).join(' ');
+              element["value"] = element['Kwota [PLN]'];
+              element["type"] = "Opis zadania";
+            }
+            else
+            {
+              element["type"] = "Nazwa zadania";
+            }
             search_results.push(element);
           });
           callback(null,1);
         });
       },
       function(callback){
-        departments = db.collection("departmentSearch");
-        departments.find({$text: {$search: req.body.query }}).toArray(function(error, data){
+        search = db.collection("search");
+        search.find({$text: {$search: req.body.query }}).toArray(function(error, data){
           data.map(function(element){
-            element["type"] = "Nazwa wydziału";
             search_results.push(element);
           });
           callback(null,2);    
         });        
       },
-      function(callback){
-        division = db.collection("divisionSearch");
-        division.find({$text: {$search: req.body.query }}).toArray(function(error, data){
-          data.map(function(element){
-            element["type"] = "Nazwa działu";
-            search_results.push(element);
-          });
-          callback(null,3);    
-        });        
-      },
-      function(callback){
-        division = db.collection("chapterSearch");
-        division.find({$text: {$search: req.body.query }}).toArray(function(error, data){
-          data.map(function(element){
-            element["type"] = "Nazwa rozdziału";
-            search_results.push(element);
-          });
-          callback(null,4);    
-        });        
-      }
     ], function(error, results){
       console.log(search_results);
       res.render('search', {
