@@ -118,7 +118,8 @@ router.get('/kontakt', function(req, res){
 	res.render('kontakt', { title: 'Kontakt'});
 });
 
-//////obsluga wykresow
+///obsluga wykresow
+/*
 router.get('/', function(req, res) {
   var html = '<form method="post" action="/chart">'+
       '<label for="first"><span>dział</span><input type="text" name="first" id="first"></label><br/>'+
@@ -128,6 +129,7 @@ router.get('/', function(req, res) {
                
   res.send(html);
 });
+*/
 
 router.post('/chart', function(req, res) {
   var first = req.body.first;
