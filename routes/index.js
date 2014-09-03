@@ -33,28 +33,32 @@ router.post('/search', function(req, res){
       function(callback){
         main = db.collection("main");
         main.find({$text: {$search: req.body.query }}).toArray(function(error, data){
-          data.map(function(element){
-            var index = element["Opis zadania"].indexOf(req.body.query);
-            if ( index != -1 ) {
-              element["id"] = element["Opis zadania"].substr(index).split(' ').slice(0,4).join(' ');
-              element["value"] = element['Kwota [PLN]'];
-              element["type"] = "Opis zadania";
-            }
-            else
-            {
-              element["type"] = "Nazwa zadania";
-            }
-            search_results.push(element);
-          });
+          if (data) {
+            data.map(function(element){
+              var index = element["Opis zadania"].indexOf(req.body.query);
+              if ( index != -1 ) {
+                element["id"] = element["Opis zadania"].substr(index).split(' ').slice(0,4).join(' ');
+                element["value"] = element['Kwota [PLN]'];
+                element["type"] = "Opis zadania";
+              }
+              else
+              {
+                element["type"] = "Nazwa zadania";
+              }
+              search_results.push(element);
+            });
+          }
           callback(null,1);
         });
       },
       function(callback){
         search = db.collection("search");
         search.find({$text: {$search: req.body.query }}).toArray(function(error, data){
-          data.map(function(element){
-            search_results.push(element);
-          });
+          if (data) {
+            data.map(function(element){
+              search_results.push(element);
+            });
+          }
           callback(null,2);    
         });        
       },
