@@ -94,7 +94,7 @@ var parse = function(filepath) {
           collection = db.collection("search");
           collection.ensureIndex({
             "id": "text"
-          }, function()
+          }, function(){
             process.stderr.write("done\n");
             callback(null, 7);
           });
