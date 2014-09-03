@@ -37,6 +37,8 @@ router.post('/search', function(req, res){
             console.log(error);
           }
           if (data) {
+            console.log("DATA!!!!");
+            console.log(data);
             data.map(function(element){
               var index = element["Opis zadania"].indexOf(req.body.query);
               if ( index != -1 ) {
@@ -51,6 +53,10 @@ router.post('/search', function(req, res){
               search_results.push(element);
             });
           }
+          else
+          {
+            console.log("No data!");
+          }
           callback(null,1);
         });
       },
@@ -61,9 +67,15 @@ router.post('/search', function(req, res){
             console.log(error);
           }
           if (data) {
+            console.log("DATA!!!!");            
+            console.log(data);
             data.map(function(element){
               search_results.push(element);
             });
+          }
+          else
+          {
+            console.log("No data!");
           }
           callback(null,2);    
         });        
