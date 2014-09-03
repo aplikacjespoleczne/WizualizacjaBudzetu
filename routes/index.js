@@ -32,7 +32,7 @@ router.post('/search', function(req, res){
     async.series([
       function(callback){
         main = db.collection("main");
-        main.find({$text: {$search: req.body.query }}).toArray(function(error, data){
+        main.find("text", {search: req.body.query }).toArray(function(error, data){
           if (error) {
             console.log(error);
           }
@@ -56,7 +56,7 @@ router.post('/search', function(req, res){
       },
       function(callback){
         search = db.collection("search");
-        search.find({$text: {$search: req.body.query }}).toArray(function(error, data){
+        search.find("text", {search: req.body.query }).toArray(function(error, data){
           if (error) {
             console.log(error);
           }
