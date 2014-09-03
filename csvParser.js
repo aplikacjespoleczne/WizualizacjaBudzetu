@@ -86,17 +86,17 @@ var parse = function(filepath) {
             "Opis zadania": "text"
           }, function(){
             process.stderr.write("done\n");
-            callback(null, 8);
+            callback(null, 6);
           });
         },
         function(callback) {
           process.stderr.write("Indexing text fields in search collection of DB...");
           collection = db.collection("search");
           collection.ensureIndex({
-            "id": "text",
-          }, function(){
+            "id": "text"
+          }, function()
             process.stderr.write("done\n");
-            callback(null, 9);
+            callback(null, 7);
           });
         }    
       ], function(error, results) {
