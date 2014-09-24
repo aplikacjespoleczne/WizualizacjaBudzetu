@@ -31,15 +31,14 @@ router.post('/search', function(req, res){
     }
     async.series([
       function(callback){
-        //main = db.collection("main");
-        db.command({text:"main", search: req.body.query}, function(error, data) {
-        //main.find("text", {search: req.body.query }).toArray(function(error, data){
+        main = db.collection("main");
+        //db.command({text:"main", search: req.body.query}, function(error, data) {
+        main.find({$text: {$search: req.body.query }}).toArray(function(error, data){
           if (error) {
             console.log(error);
           }
-          if (data) {
+          if (data.length > 0) {
             console.log("DATA!!!!");
-            console.log(data);
             data.map(function(element){
               var index = element["Opis zadania"].indexOf(req.body.query);
               if ( index != -1 ) {
@@ -62,9 +61,9 @@ router.post('/search', function(req, res){
         });
       },
       function(callback){
-        //search = db.collection("search");
-        //search.find("text", {search: req.body.query }).toArray(function(error, data){
-        db.command({text:"search", search: req.body.query}, function(error, data) {
+        search = db.collection("search");
+        search.find({$text: {search: req.body.query}}).toArray(function(error, data){
+        //db.command({text:"search", search: req.body.query}, function(error, data) {
           if (error) {
             console.log(error);
           }
