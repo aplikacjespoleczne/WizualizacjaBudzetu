@@ -9,6 +9,8 @@ var d3 = require('d3');
 var jsdom = require('jsdom');
 var MongoClient = require('mongodb').MongoClient;
 
+var limit = 12;
+
 /* GET home page. */
 router.get('/', function(req, res){
 	res.render('index');
@@ -21,72 +23,67 @@ router.get('/query', function(req, res){
   res.json({value:"kasza"});
 });
 
-router.post('/search', function(req, res){
-  console.log(req.body.query);
+router.get('/search', function(req, res){
   var search_results = [];
   MongoClient.connect(config.MONGO, function(error, db) {
     if (error) {
       res.render('admin/error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
       return; 
     }
-    async.series([
-      function(callback){
-        main = db.collection("main");
-        //db.command({text:"main", search: req.body.query}, function(error, data) {
-        main.find({$text: {$search: req.body.query }}).toArray(function(error, data){
-          if (error) {
-            console.log(error);
-          }
-          if (data.length > 0) {
-            console.log("DATA!!!!");
-            data.map(function(element){
-              var index = element["Opis zadania"].indexOf(req.body.query);
-              if ( index != -1 ) {
-                element["id"] = element["Opis zadania"].substr(index).split(' ').slice(0,4).join(' ');
-                element["value"] = element['Kwota [PLN]'];
-                element["type"] = "Opis zadania";
-              }
-              else
-              {
-                element["type"] = "Nazwa zadania";
-              }
-              search_results.push(element);
-            });
-          }
-          else
-          {
-            console.log("No data!");
-          }
-          callback(null,1);
-        });
-      },
-      function(callback){
-        search = db.collection("search");
-        search.find({$text: {search: req.body.query}}).toArray(function(error, data){
-        //db.command({text:"search", search: req.body.query}, function(error, data) {
-          if (error) {
-            console.log(error);
-          }
-          if (data) {
-            console.log("DATA!!!!");            
-            console.log(data);
-            data.map(function(element){
-              search_results.push(element);
-            });
-          }
-          else
-          {
-            console.log("No data!");
-          }
-          callback(null,2);    
-        });        
-      },
-    ], function(error, results){
-      console.log(search_results);
+    main = db.collection("main");
+    main.find({$text: {$search: req.query.query }}).toArray(function(error, data){
+      if (error) {
+        console.log(error);
+      }
+      if (data) {
+        var number_of_results = countArraySize(data);
+        search_results = prepare_search_results(data.splice(0,limit), req.query.query);
+      }
+      var result = pagination(1, number_of_results);
       res.render('search', {
         data: search_results, 
-        query: req.body.query
-      }); 
+        query: req.query.query,
+        total: result["total"],
+        start: 1,
+        page: 1,
+        prev: result["prev"],
+        next: result["next"]
+      });
+    });
+  });
+});
+
+router.post('/search', function(req, res){
+  res.redirect('/search?query=' + req.body.query);
+});
+
+router.get('/search/pages/:page', function(req, res){
+  var search_results = [];
+  var page = parseInt(req.params.page);
+  MongoClient.connect(config.MONGO, function(error, db) {
+    if (error) {
+      res.render('admin/error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
+      return; 
+    }
+    main = db.collection("main");
+    main.find({$text: {$search: req.query.query }}).toArray(function(error, data){
+      if (error) {
+        console.log(error);
+      }
+      if (data) {
+        var number_of_results = countArraySize(data);
+        search_results = prepare_search_results(data.splice(((page-1)*limit),limit), req.query.query);
+      }
+      var result = pagination(page, number_of_results);
+      res.render('search', {
+        data: search_results, 
+        query: req.query.query,
+        total: result["total"],
+        start: ((page-1)*limit)+1,
+        page: page,
+        prev: result["prev"],
+        next: result["next"]
+      });
     });
   });
 });
@@ -324,6 +321,60 @@ var invokeParser = function(path){
     process.stderr.write("Invoking parser...\n");
     csvParser.parse(path);
   }
+}
+
+var prepare_search_results = function(data, query) {
+  var search_results = [];
+  data.map(function(element){
+    var row = {};
+    if (element["type"] == "task") {
+      var index = element["search_task_description"].indexOf(query);
+      if ( index != -1 ) {
+        row.text = element["search_task_description"].substr(index).split(' ').slice(0,4).join(' ');
+        row.value = element['Kwota [PLN]'];
+        row.type = "Opis zadania";           
+      }
+      else
+      {
+        row.text = element['Zadanie - nazwa'];
+        row.value = element['Kwota [PLN]'];
+        row.type = "Nazwa zadania";  
+      }
+    } else {
+      row.text = element['search_id'];
+      row.value = element['value'];
+      if (element['type'] == "department") {
+        row.type = "Wydział";             
+      } else if (element['type'] == "division") {
+        row.type = "Dział";
+      } else {
+        row.type = "Rozdział";
+      }
+
+    }
+    search_results.push(row);
+  });
+  return search_results;
+}
+
+var pagination = function(page, numOfElements) {
+  var num = page * limit;
+  var result = {};
+  result.total = numOfElements;
+  result.pages = Math.ceil(numOfElements / limit);
+  if (num < numOfElements) result.prev = true;
+  if (num > limit) result.next = true;
+  return result;
+}
+
+var countArraySize = function(object) {
+  var result = 0;
+  for (var property in object) {
+    if (object.hasOwnProperty(property)) {
+      result++;
+    }
+  }
+  return result;
 }
 
 module.exports = router;

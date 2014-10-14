@@ -30,11 +30,13 @@ var parse = function(filepath) {
         },
         function(callback){
           process.stderr.write("Injecting pure data into database..........");
-          collection = db.collection("main");
-          collection.insert(jsonObj, function(){
-            process.stderr.write("done\n");
-            callback(null, 2);
-          });        
+          createMainStructure(jsonObj, function(result_hash){
+            collection = db.collection("main");
+            collection.insert(result_hash, function(){
+              process.stderr.write("done\n");
+              callback(null, 2);
+            });  
+          });      
         },
         function(callback){
           process.stderr.write("Creating 1st level of structure..........");
@@ -68,37 +70,19 @@ var parse = function(filepath) {
           }
           process.stderr.write("done\n");
           callback(null, 4); 
-        },
-        function(callback) {
-          process.stderr.write("Creating search structure..........");
-          createSearchStructure(jsonObj, function(result_hash){
-            level0_hash = result_hash;
-            injectDatabase(db, "search", level0_hash);
-            process.stderr.write("done\n");
-            callback(null, 5);            
-          });      
-        },       
+        },     
         function(callback) {
           process.stderr.write("Indexing text fields in the main collection of DB...");
           collection = db.collection("main");
           collection.ensureIndex({
-            "Zadanie - nazwa": "text",
-            "Opis zadania": "text"
+            "search_task_name": "text",
+            "search_task_description": "text",
+            "search_id": "text"
           }, function(){
             process.stderr.write("done\n");
-            callback(null, 6);
+            callback(null, 5);
           });
-        },
-        function(callback) {
-          process.stderr.write("Indexing text fields in search collection of DB...");
-          collection = db.collection("search");
-          collection.ensureIndex({
-            "id": "text"
-          }, function(){
-            process.stderr.write("done\n");
-            callback(null, 7);
-          });
-        }    
+        }  
       ], function(error, results) {
         process.stderr.write("Creating of structure finished.\n"); 
       });  
@@ -106,44 +90,59 @@ var parse = function(filepath) {
   });
 }
 
-var createSearchStructure = function(jsonObj, callback) {
-  var result_hash = {};
+var createMainStructure = function(jsonObj, callback) {
+  var result_array = [],
+      temporary_array = [];
+
   for (var element in jsonObj) {
-    key = jsonObj[element]['Wydział'];
-    if (result_hash.hasOwnProperty(key)) {
-      result_hash[key]["value"] = result_hash[key]["value"] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+    var item = {};
+    
+    row = jsonObj[element];
+    row["search_task_name"] = jsonObj[element]["Zadanie - nazwa"];
+    row["type"] = "task";
+    row["search_task_description"] = jsonObj[element]["Opis zadania"];
+    result_array.push(row);
+
+    var key = jsonObj[element]["Wydział"];
+    if (temporary_array[key]) {
+      temporary_array[key].value = temporary_array[key].value + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
     } else {
-      result_hash[key] = {
-        "id": key,
-        "type" : "Nazwa wydziału",
-        "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''))
+      temporary_array[key] = {
+         "search_id": key,
+         "type" : "department",
+         "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''))        
       }
     }
     key = jsonObj[element]["Dział - nazwa"];
-    if (result_hash.hasOwnProperty(key)) {
-      result_hash[key]["value"] = result_hash[key]["value"] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+    if (temporary_array[key]) {
+      temporary_array[key].value = temporary_array[key].value + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
     } else {
-      result_hash[key] = {
-        "id": key,
-        "type" : "Nazwa działu",
+      temporary_array[key] = {      
+        "search_id": key,
+        "type" : "division",
         "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
-        "department" : jsonObj[element]["Wydział"]
-      }
+        "department" : jsonObj[element]["Wydział"]   
+      }   
     }
     key = jsonObj[element]["Rozdział - nazwa"];
-    if (result_hash.hasOwnProperty(key)) {
-      result_hash[key]["value"] = result_hash[key]["value"] + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
+    if (temporary_array[key]) {
+      temporary_array[key].value = temporary_array[key].value + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
     } else {
-      result_hash[key] = {
-        "id": key,
-        "type" : "Nazwa rodziału",
+      temporary_array[key] = {
+        "search_id": key,
+        "type" : "chapter",
         "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
         "department" : jsonObj[element]["Wydział"],
-        "division" : jsonObj[element]["Dział"]
-      }
+        "division" : jsonObj[element]["Dział - nazwa"]    
+      }  
     }
   }
-  callback(result_hash);
+
+  for (var key in temporary_array) {
+    result_array.push(temporary_array[key]);
+  }
+  //console.log(result_array);
+  callback(result_array);
 }
 
 var createStructureLevel1 = function(jsonObj, callback) {
@@ -208,7 +207,7 @@ var cleanDB = function(callback) {
   MongoClient.connect(config.MONGO, function(err, db) {
     db.collectionNames(function(err, collections) {
       collections.forEach(function(c){
-        var name = c.name.substring(config.DBNAME.length + 1);
+        var name = c.name.substring(config.db_name.length + 1);
         if (name != "users") {
           db.dropCollection(name);
         }
