@@ -8,10 +8,16 @@ block content
   if (data.length > 0)
     ol(start = start)
       each row in data
-        li #{row.text} - #{row.value} PLN
-        | #{row.type}
-        br
-        br
+        if (row.type == "Nazwa zadania")
+          li: a(href="/task/#{row.id}" class = 'search-result') #{row.text} - #{row.value} PLN
+          a(href="/task/#{row.id}" class = 'search-result') #{row.type}
+          br
+          br
+        else
+          li: a(href="/task/#{row.id}" class = 'search-result') #{row.text} - #{row.value} PLN
+          a(href="/task/#{row.id}" class = 'search-result') #{row.type}
+          br
+          br
     br
     if (next)
       a(href="/search/pages/#{page - 1}?query=" + query) Poprzedni

@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  if (task.type == 'Nazwa zadania')
+    h3= task.type
+    br
+    h2= task.name
+    br
+    h1 #{task.value} PLN
+    br
+    if (task.description)
+      p #{task.description}
+    else
+      p Brak opisu
+    br
+    p Wydział: #{task.department}
+    p Dział: #{task.division}
+    p Rozdział #{task.chapter}
+    p Rodzaj: #{task.class}
+    p Część: #{task.part}
+  else
+    h3= task.name
+    br
+    h1 #{task.value} PLN

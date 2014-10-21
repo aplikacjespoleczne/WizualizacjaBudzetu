@@ -8,6 +8,7 @@ var amountProvider = new AmountProvider();
 var d3 = require('d3');
 var jsdom = require('jsdom');
 var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
 
 var limit = 12;
 
@@ -18,7 +19,7 @@ router.get('/', function(req, res){
 
 router.get('/query', function(req, res){
   //console.log(req);
-  console.log(req.query.query);
+  //console.log(req.query.query);
   //res.render('search', {query: req.query.query});
   res.json({value:"kasza"});
 });
@@ -62,7 +63,7 @@ router.get('/search/pages/:page', function(req, res){
   var page = parseInt(req.params.page);
   MongoClient.connect(config.MONGO, function(error, db) {
     if (error) {
-      res.render('admin/error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
+      res.render('error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
       return; 
     }
     main = db.collection("main");
@@ -83,6 +84,27 @@ router.get('/search/pages/:page', function(req, res){
         page: page,
         prev: result["prev"],
         next: result["next"]
+      });
+    });
+  });
+});
+
+router.get('/task/:task', function(req, res){
+  var object = ObjectID.createFromHexString(req.params.task);
+  MongoClient.connect(config.MONGO, function(error, db) {
+    if (error) {
+      res.render('error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
+      return; 
+    }
+    main = db.collection("main");
+    main.find({'_id': object}).toArray(function(error, data){
+      if (error) {
+        console.log(error);
+      }
+      var task = {}
+      task = prepare_task(data[0]);
+      res.render('task', {
+        task: task
       });
     });
   });
@@ -323,6 +345,27 @@ var invokeParser = function(path){
   }
 }
 
+var prepare_task = function(data) {
+  task = {};
+  if (data.type == 'task') {
+    task.type = 'Nazwa zadania';
+    task.name = data['Zadanie - nazwa'];
+    task.value = data['Kwota [PLN]'];
+    task.description = data['Opis zadania'];
+    task.department = data['Wydział'];
+    task.division = data['Dział - nazwa'];
+    task.chapter = data['Rozdział - nazwa'];
+    task.class = data['Typ'];
+    task.part = data['Część'];
+  }
+  else {
+    task.type = data.type;
+    task.name = data['search_id'];
+    task.value = data['value'];
+  }
+  return task;
+}
+
 var prepare_search_results = function(data, query) {
   var search_results = [];
   data.map(function(element){
@@ -333,16 +376,19 @@ var prepare_search_results = function(data, query) {
         row.text = element["search_task_description"].substr(index).split(' ').slice(0,4).join(' ');
         row.value = element['Kwota [PLN]'];
         row.type = "Opis zadania";           
+        row.id = element._id;
       }
       else
       {
         row.text = element['Zadanie - nazwa'];
         row.value = element['Kwota [PLN]'];
         row.type = "Nazwa zadania";  
+        row.id = element._id;
       }
     } else {
       row.text = element['search_id'];
       row.value = element['value'];
+      row.id = element._id;
       if (element['type'] == "department") {
         row.type = "Wydział";             
       } else if (element['type'] == "division") {
