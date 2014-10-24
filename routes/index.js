@@ -19,9 +19,27 @@ router.get('/', function(req, res){
 
 router.get('/query', function(req, res){
   //console.log(req);
-  //console.log(req.query.query);
+  console.log(req.query.query);
   //res.render('search', {query: req.query.query});
-  res.json({value:"kasza"});
+  var search_results = [];
+  MongoClient.connect(config.MONGO, function(error, db) {
+    if (error) {
+      res.json({value:""});
+      return; 
+    }
+    main = db.collection("main");
+    console.log('BBBB');
+    main.find({$text: {$search: "\"" + req.query.query + "\"" }}).toArray(function(error, data){
+      if (error) {
+        console.log(error);
+      }
+      if (data) {
+        search_results = prepare_typeaheads(data, req.query.query);
+      }
+      console.log(search_results);
+      res.json(search_results);
+    });
+  });
 });
 
 router.get('/search', function(req, res){
@@ -32,7 +50,7 @@ router.get('/search', function(req, res){
       return; 
     }
     main = db.collection("main");
-    main.find({$text: {$search: req.query.query }}).toArray(function(error, data){
+    main.find({$text: {$search: "\"" + req.query.query + "\"" }}).toArray(function(error, data){
       if (error) {
         console.log(error);
       }
@@ -67,7 +85,7 @@ router.get('/search/pages/:page', function(req, res){
       return; 
     }
     main = db.collection("main");
-    main.find({$text: {$search: req.query.query }}).toArray(function(error, data){
+    main.find({$text: {$search: "\"" + req.query.query + "\"" }}).toArray(function(error, data){
       if (error) {
         console.log(error);
       }
@@ -343,6 +361,22 @@ var invokeParser = function(path){
     process.stderr.write("Invoking parser...\n");
     csvParser.parse(path);
   }
+}
+
+var prepare_typeaheads = function(data, query) {
+  var search_results = [];
+  data.map(function(element){
+    if (element['type'] == 'task') {
+      var index = element["search_task_name"].indexOf(query);
+      if ( index != -1 ) {   
+        search_results.push({value: element["search_task_name"]});
+      }
+    }
+    else {
+      search_results.push({value: element['search_id']});
+    }
+  });
+  return search_results;
 }
 
 var prepare_task = function(data) {

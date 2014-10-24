@@ -16,13 +16,12 @@ html
           },
           queryTokenizer: Bloodhound.tokenizers.whitespace,
           remote: {
-            url: 'http://localhost:8080/query?query=%QUERY',
-            filter: function(parsedResponse) {
-              console.log(parsedResponse);
-              var res = [{value:"kasza"}];
-              console.log(res);
-              return res;
-            }
+            url: 'http://localhost:8080/query?query=%QUERY'
+            //filter: function(parsedResponse) {
+            //  parsedResponse.map(function(record){
+            //    return { value: record };
+            //  });
+            //}
           }
         });
         suggestions.initialize();
