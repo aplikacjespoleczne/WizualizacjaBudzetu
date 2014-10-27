@@ -57,6 +57,10 @@ header {
 	margin-left: 10px;
 }
 
+#content ol{
+	-webkit-padding-start: 2em;
+}
+
 #scrollable-dropdown-menu {
 	width: 300px;
 	display: inline;
@@ -74,6 +78,11 @@ footer {
 }
 
 #footer-container {
+}
+
+a.search-result {
+	color: black;
+	text-decoration: none;
 }
 
 footer div {
