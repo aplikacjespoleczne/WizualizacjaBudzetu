@@ -3,7 +3,15 @@ AmountProvider = function() {
 
 AmountProvider.prototype.find = function(first, second, callback) {
 	var MongoClient = require('mongodb').MongoClient, format = require('util').format;
-	MongoClient.connect('mongodb://mo14248_wiz_budz:kdpWizualizujeBudzet123@mongo0.mydevil.net:27017/mo14248_wiz_budz', function(err, db) {
+	var config = require('./config');
+	//We don't use external database for now so we connect to localhost
+	// MongoClient.connect('mongodb://mo14248_wiz_budz:kdpWizualizujeBudzet123@mongo0.mydevil.net:27017/mo14248_wiz_budz', function(err, db) {
+	MongoClient.connect(config.MONGO, function(err, db) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+
 		var collectionName;
 		if (first == null) {
 			collectionName = "null:null";
@@ -18,20 +26,22 @@ AmountProvider.prototype.find = function(first, second, callback) {
 			if (err) {
 				callback(err);
 			}
-			
+
 			callback(null, results);
 		});
 	});
 }
 
 AmountProvider.prototype.findTest = function(callback) {
-	
+
 	var MongoClient = require('mongodb').MongoClient, format = require('util').format;
-	MongoClient.connect('mongodb://mo14248_wiz_budz:kdpWizualizujeBudzet123@mongo0.mydevil.net:27017/mo14248_wiz_budz', function(err, db) {
+	//We don't use external database for now so we connect to localhost
+	// MongoClient.connect('mongodb://mo14248_wiz_budz:kdpWizualizujeBudzet123@mongo0.mydevil.net:27017/mo14248_wiz_budz', function(err, db) {
+	MongoClient.connect(config.MONGO, function(err, db) {
 		if (err) throw err;
 		var collectionName = 'test';
 		collection = db.collection(collectionName);
-	/*	
+	/*
 collection.insert({"key": "103", "value":10}, function(err, records){
   console.log("Record added as "+records[0]._id);
 });
@@ -53,11 +63,11 @@ collection.insert({"key": "107", "value":90}, function(err, records){
 			if (err) {
 				callback(err);
 			}
-			
+
 			callback(null, results);
 		});
 	});
-	
+
 }
 
 exports.AmountProvider = AmountProvider;
