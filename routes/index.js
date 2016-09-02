@@ -194,6 +194,7 @@ router.get('/', function(req, res) {
 router.post('/chart', function(req, res) {
   var first = req.body.first;
   var second = req.body.second;
+	
   if (first == '') {
     first = null;
   }
