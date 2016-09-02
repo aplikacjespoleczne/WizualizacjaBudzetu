@@ -1,7 +1,7 @@
 var Converter = require('csvtojson').core.Converter;
 var fs = require('fs');
 var async = require("async");
-var config = require('./config');
+var dbConfig = require('./dbConfig');
 var MongoClient = require('mongodb').MongoClient, format = require('util').format;
 
 var parse = function(filepath) {
@@ -15,13 +15,13 @@ var parse = function(filepath) {
   var level1_hash = {};
 
   fileStream.pipe(csvConverter);
-  
+
   csvConverter.on("end_parsed", function(jsonObj) {
-    
+
     var key;
-    
-    MongoClient.connect(config.MONGO, function(err, db) {
-     
+
+    MongoClient.connect(dbConfig.MONGO, function(err, db) {
+
       async.series([
         function(callback){
           cleanDB(function(){
@@ -35,8 +35,8 @@ var parse = function(filepath) {
             collection.insert(result_hash, function(){
               process.stderr.write("done\n");
               callback(null, 2);
-            });  
-          });      
+            });
+          });
         },
         function(callback){
           process.stderr.write("Creating 1st level of structure..........");
@@ -44,7 +44,7 @@ var parse = function(filepath) {
             level1_hash = result_hash;
             injectDatabase(db, "null:null", level1_hash);
             process.stderr.write("done\n");
-            callback(null, 3);            
+            callback(null, 3);
           });
         },
         function(callback) {
@@ -54,23 +54,23 @@ var parse = function(filepath) {
               key1 = main_key;
               process.nextTick(createStructureLevel2(jsonObj, key1, function(result_hash, key1){
                 name = key1 + ":null";
-                injectDatabase(db, name, result_hash);               
+                injectDatabase(db, name, result_hash);
                 level2_hash = result_hash;
                 for (var l2_key in level2_hash){
-                  if (l2_key != "_id" ){ 
+                  if (l2_key != "_id" ){
                     key2 = l2_key;
                     process.nextTick(createStructureLevel3(jsonObj, key1, key2, function(result_hash, key1, key2){
                       name = key1 + ":" + key2;
-                      injectDatabase(db, name, result_hash);               
+                      injectDatabase(db, name, result_hash);
                     }));
                   }
-                }                  
+                }
               }));
             }
           }
           process.stderr.write("done\n");
-          callback(null, 4); 
-        },     
+          callback(null, 4);
+        },
         function(callback) {
           process.stderr.write("Indexing text fields in the main collection of DB...");
           collection = db.collection("main");
@@ -82,11 +82,11 @@ var parse = function(filepath) {
             process.stderr.write("done\n");
             callback(null, 5);
           });
-        }  
+        }
       ], function(error, results) {
-        process.stderr.write("Creating of structure finished.\n"); 
-      });  
-    }); 
+        process.stderr.write("Creating of structure finished.\n");
+      });
+    });
   });
 }
 
@@ -96,7 +96,7 @@ var createMainStructure = function(jsonObj, callback) {
 
   for (var element in jsonObj) {
     var item = {};
-    
+
     row = jsonObj[element];
     row["search_task_name"] = jsonObj[element]["Zadanie - nazwa"];
     row["type"] = "task";
@@ -110,19 +110,19 @@ var createMainStructure = function(jsonObj, callback) {
       temporary_array[key] = {
          "search_id": key,
          "type" : "department",
-         "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''))        
+         "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''))
       }
     }
     key = jsonObj[element]["Dział - nazwa"];
     if (temporary_array[key]) {
       temporary_array[key].value = temporary_array[key].value + parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,''));
     } else {
-      temporary_array[key] = {      
+      temporary_array[key] = {
         "search_id": key,
         "type" : "division",
         "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
-        "department" : jsonObj[element]["Wydział"]   
-      }   
+        "department" : jsonObj[element]["Wydział"]
+      }
     }
     key = jsonObj[element]["Rozdział - nazwa"];
     if (temporary_array[key]) {
@@ -133,8 +133,8 @@ var createMainStructure = function(jsonObj, callback) {
         "type" : "chapter",
         "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
         "department" : jsonObj[element]["Wydział"],
-        "division" : jsonObj[element]["Dział - nazwa"]    
-      }  
+        "division" : jsonObj[element]["Dział - nazwa"]
+      }
     }
   }
 
@@ -194,7 +194,7 @@ var createStructureLevel3 = function(jsonObj, main_key, sec_key, callback) {
             "id": key,
             "value" : parseInt((jsonObj[element]['Kwota [PLN]']).replace(/\s+/g,'')),
             "description" : jsonObj[element]["Zadanie - nazwa"]
-          }          
+          }
         }
       }
     }
@@ -204,10 +204,10 @@ var createStructureLevel3 = function(jsonObj, main_key, sec_key, callback) {
 
 var cleanDB = function(callback) {
   process.stderr.write("Cleaning data base...........");
-  MongoClient.connect(config.MONGO, function(err, db) {
+  MongoClient.connect(dbConfig.MONGO, function(err, db) {
     db.collectionNames(function(err, collections) {
       collections.forEach(function(c){
-        var name = c.name.substring(config.db_name.length + 1);
+        var name = c.name.substring(dbConfig.db_name.length + 1);
         if (name != "users") {
           db.dropCollection(name);
         }

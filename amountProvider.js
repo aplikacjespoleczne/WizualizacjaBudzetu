@@ -3,16 +3,18 @@ AmountProvider = function() {
 
 AmountProvider.prototype.find = function(first, second, callback) {
 	var MongoClient = require('mongodb').MongoClient, format = require('util').format;
-	var config = require('./config');
+	var dbConfig = require('./dbConfig');
+
 	//We don't use external database for now so we connect to localhost
 	// MongoClient.connect('mongodb://mo14248_wiz_budz:kdpWizualizujeBudzet123@mongo0.mydevil.net:27017/mo14248_wiz_budz', function(err, db) {
-	MongoClient.connect(config.MONGO, function(err, db) {
+	MongoClient.connect(dbConfig.MONGO, function(err, db) {
 		if (err) {
 			console.log(err);
 			return;
 		}
 
 		var collectionName;
+
 		if (first == null) {
 			collectionName = "null:null";
 		} else if (second == null) {
@@ -20,6 +22,7 @@ AmountProvider.prototype.find = function(first, second, callback) {
 		} else {
 			collectionName = first + ":" + second;
 		}
+
 		collection = db.collection(collectionName);
 
 		collection.find({}).toArray(function(err, results) {
@@ -35,9 +38,11 @@ AmountProvider.prototype.find = function(first, second, callback) {
 AmountProvider.prototype.findTest = function(callback) {
 
 	var MongoClient = require('mongodb').MongoClient, format = require('util').format;
+
 	//We don't use external database for now so we connect to localhost
 	// MongoClient.connect('mongodb://mo14248_wiz_budz:kdpWizualizujeBudzet123@mongo0.mydevil.net:27017/mo14248_wiz_budz', function(err, db) {
-	MongoClient.connect(config.MONGO, function(err, db) {
+
+	MongoClient.connect(dbConfig.MONGO, function(err, db) {
 		if (err) throw err;
 		var collectionName = 'test';
 		collection = db.collection(collectionName);

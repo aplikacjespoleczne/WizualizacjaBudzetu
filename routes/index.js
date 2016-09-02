@@ -2,7 +2,7 @@ var express = require('express');
 var async = require("async");
 var router = express.Router();
 var csvParser = require('../csvParser');
-var config = require('../config');
+var dbConfig = require('../dbConfig');
 var AmountProvider = require('../amountProvider').AmountProvider;
 var amountProvider = new AmountProvider();
 var d3 = require('d3');
@@ -22,10 +22,10 @@ router.get('/query', function(req, res){
   console.log(req.query.query);
   //res.render('search', {query: req.query.query});
   var search_results = [];
-  MongoClient.connect(config.MONGO, function(error, db) {
+  MongoClient.connect(dbConfig.MONGO, function(error, db) {
     if (error) {
       res.json({value:""});
-      return; 
+      return;
     }
     main = db.collection("main");
     console.log('BBBB');
@@ -44,10 +44,10 @@ router.get('/query', function(req, res){
 
 router.get('/search', function(req, res){
   var search_results = [];
-  MongoClient.connect(config.MONGO, function(error, db) {
+  MongoClient.connect(dbConfig.MONGO, function(error, db) {
     if (error) {
       res.render('admin/error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
-      return; 
+      return;
     }
     main = db.collection("main");
     main.find({$text: {$search: "\"" + req.query.query + "\"" }}).toArray(function(error, data){
@@ -60,7 +60,7 @@ router.get('/search', function(req, res){
       }
       var result = pagination(1, number_of_results);
       res.render('search', {
-        data: search_results, 
+        data: search_results,
         query: req.query.query,
         total: result["total"],
         start: 1,
@@ -79,10 +79,10 @@ router.post('/search', function(req, res){
 router.get('/search/pages/:page', function(req, res){
   var search_results = [];
   var page = parseInt(req.params.page);
-  MongoClient.connect(config.MONGO, function(error, db) {
+  MongoClient.connect(dbConfig.MONGO, function(error, db) {
     if (error) {
       res.render('error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
-      return; 
+      return;
     }
     main = db.collection("main");
     main.find({$text: {$search: "\"" + req.query.query + "\"" }}).toArray(function(error, data){
@@ -95,7 +95,7 @@ router.get('/search/pages/:page', function(req, res){
       }
       var result = pagination(page, number_of_results);
       res.render('search', {
-        data: search_results, 
+        data: search_results,
         query: req.query.query,
         total: result["total"],
         start: ((page-1)*limit)+1,
@@ -109,10 +109,10 @@ router.get('/search/pages/:page', function(req, res){
 
 router.get('/task/:task', function(req, res){
   var object = ObjectID.createFromHexString(req.params.task);
-  MongoClient.connect(config.MONGO, function(error, db) {
+  MongoClient.connect(dbConfig.MONGO, function(error, db) {
     if (error) {
       res.render('error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
-      return; 
+      return;
     }
     main = db.collection("main");
     main.find({'_id': object}).toArray(function(error, data){
@@ -137,17 +137,17 @@ router.post('/admin/admin', function(req, res) {
   MongoClient.connect(config.MONGO, function(error, db) {
   	if (error) {
   		res.render('admin/error',{message: 'Wystąpił błąd serwera. Spróbuj póżniej.'});
-  		return; 
+  		return;
   	}
 	  users = db.collection("users");
   	users.find().toArray(function(error, admin_data){
 
   		if ((req.body.username != admin_data[0]["user"]) || (req.body.password != admin_data[0]["password"])) {
    			res.render('admin/error',{message: 'Wprowadzono błędne dane.'});
-  			return;  	    	
+  			return;
   		} else {
   			res.render('admin/file-upload');
-  	  	}  	
+  	  	}
   	});
   });
 });
@@ -186,7 +186,7 @@ router.get('/', function(req, res) {
       '<label for="second"><span>rozdział</span><input type="text" name="second" id="second"></label><br/><br/>'+
       '<input type="submit" value="Pokaż wykres">'+
       '</form>';
-               
+
   res.send(html);
 });
 */
@@ -200,7 +200,7 @@ router.post('/chart', function(req, res) {
   if (second == '') {
     second = null;
   }
-  
+
   var htmlStructure =
     '<html>'+
       '<head><title>wykres</title></head>'+
@@ -209,23 +209,23 @@ router.post('/chart', function(req, res) {
         '<script src="http://d3js.org/d3.v3.min.js"></script>'+
       '</body>'+
     '</html>';
-  
+
   jsdom.env({ features : { QuerySelector : true }, html : htmlStructure, done : function(errors, window) {
     if (errors) {
       console.log(errors);
     }
     var el = window.document.querySelector('#main-container');
     var body = window.document.querySelector('body');
-    
+
     amountProvider.find(first, second, function(error, results) {
-      
+
       if (error) throw error;
-      
+
       if (results.length == 0) {
         res.send('<div><span>Nie znaleziono wpisów w bazie danych</span></div>'+
                  '<div><a href="/">Wróć i spróbuj ponownie</a></div>');
       }
-      
+
       var highestResult = 0;
       var resultsCount = 0;
       var maxHeight = 800;
@@ -237,14 +237,14 @@ router.post('/chart', function(req, res) {
         if ((results[item].value) > highestResult) {
           highestResult = results[item].value;
           divide = (results[item].value) / maxHeight;
-        }       
+        }
       });
 
       var canvas = d3.select(el)
               .append('svg:svg')
                 .attr('width', resultsCount * 60)
                 .attr('height', maxHeight + 100);
-    
+
       var bars = canvas.selectAll("rect")
             .data(results)
             .enter()
@@ -253,7 +253,7 @@ router.post('/chart', function(req, res) {
                 .attr("height", function(d) { return d.value / divide;})
                 .attr("x", function(d, i) { return i * 60;})
                 .attr("y", function(d, i) { return maxHeight - d.value / divide;});
-       
+
       var labels = canvas.selectAll("text")
           .data(results)
           .enter()
@@ -273,9 +273,9 @@ router.post('/chart', function(req, res) {
           .attr("x", function(d, i) { return i * 60;})
           .attr("y", function(d, i) { return maxHeight + 50;})
           .attr("fill", "blue")
-          .text(function(d) { return d.value; });    
-     
-      res.send(window.document.innerHTML);        
+          .text(function(d) { return d.value; });
+
+      res.send(window.document.innerHTML);
     });
   }});
 });
@@ -286,7 +286,7 @@ router.get('/get', function(req, res) {
     if (error) {
       throw error;
     }
-    res.json(results);  
+    res.json(results);
   });
 });
 
@@ -295,7 +295,7 @@ router.get('/get/:first', function(req, res) {
     if (error) {
       throw error;
     }
-    res.json(results);  
+    res.json(results);
   });
 });
 
@@ -304,7 +304,7 @@ router.get('/get/:first/:second', function(req, res) {
     if (error) {
       throw error;
     }
-    res.json(results);  
+    res.json(results);
   });
 });
 
@@ -313,10 +313,10 @@ router.get('/chart-test2', function(req, res) {
     if (error) {
       throw error;
     }
-    res.writeHead(200, {'Content-Type': 'application/json'});  
-    res.json(results);  
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.json(results);
   });
-  
+
 });
 router.get('/chart-test', function(req, res) {
   var htmlStructure =
@@ -327,20 +327,20 @@ router.get('/chart-test', function(req, res) {
         '<script src="http://d3js.org/d3.v3.min.js"></script>'+
       '</body>'+
     '</html>';
-  
+
   jsdom.env({ features : { QuerySelector : true }, html : htmlStructure, done : function(errors, window) {
     if (errors) {
       console.log(errors);
     }
     var el = window.document.querySelector('#main-container');
     var body = window.document.querySelector('body');
-    
+
     amountProvider.findTest(function(error, results) {
       var canvas = d3.select(el)
               .append('svg:svg')
                 .attr('width', 1000)
                 .attr('height', 1000);
-    
+
       var bars = canvas.selectAll("rect")
             .data(results)
             .enter()
@@ -350,7 +350,7 @@ router.get('/chart-test', function(req, res) {
                 .attr("x", function(d, i) { return i * 60;})
                 .attr("y", function(d, i) { return 500  - d.value * 5;});
 
-      res.send(window.document.innerHTML);          
+      res.send(window.document.innerHTML);
     });
   }});
 });
@@ -368,7 +368,7 @@ var prepare_typeaheads = function(data, query) {
   data.map(function(element){
     if (element['type'] == 'task') {
       var index = element["search_task_name"].indexOf(query);
-      if ( index != -1 ) {   
+      if ( index != -1 ) {
         search_results.push({value: element["search_task_name"]});
       }
     }
@@ -409,14 +409,14 @@ var prepare_search_results = function(data, query) {
       if ( index != -1 ) {
         row.text = element["search_task_description"].substr(index).split(' ').slice(0,4).join(' ');
         row.value = element['Kwota [PLN]'];
-        row.type = "Opis zadania";           
+        row.type = "Opis zadania";
         row.id = element._id;
       }
       else
       {
         row.text = element['Zadanie - nazwa'];
         row.value = element['Kwota [PLN]'];
-        row.type = "Nazwa zadania";  
+        row.type = "Nazwa zadania";
         row.id = element._id;
       }
     } else {
@@ -424,7 +424,7 @@ var prepare_search_results = function(data, query) {
       row.value = element['value'];
       row.id = element._id;
       if (element['type'] == "department") {
-        row.type = "Wydział";             
+        row.type = "Wydział";
       } else if (element['type'] == "division") {
         row.type = "Dział";
       } else {
