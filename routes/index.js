@@ -14,13 +14,13 @@ var limit = 12;
 
 /* GET home page. */
 router.get('/', function(req, res){
-	res.render('index');
+	res.render('main/index');
 });
 
 router.get('/query', function(req, res){
   //console.log(req);
   console.log(req.query.query);
-  //res.render('search', {query: req.query.query});
+  //res.render('main/search', {query: req.query.query});
   var search_results = [];
   MongoClient.connect(dbConfig.MONGO, function(error, db) {
     if (error) {
@@ -59,7 +59,7 @@ router.get('/search', function(req, res){
         search_results = prepare_search_results(data.splice(0,limit), req.query.query);
       }
       var result = pagination(1, number_of_results);
-      res.render('search', {
+      res.render('main/search', {
         data: search_results,
         query: req.query.query,
         total: result["total"],
@@ -121,7 +121,7 @@ router.get('/task/:task', function(req, res){
       }
       var task = {}
       task = prepare_task(data[0]);
-      res.render('task', {
+      res.render('main/task', {
         task: task
       });
     });
@@ -159,23 +159,23 @@ router.post('/admin/file-upload', function(req, res) {
 });
 
 router.get('/autorzy', function(req, res){
-	res.render('autorzy', { title: 'Autorzy'});
+	res.render('main/autorzy', { title: 'Autorzy'});
 });
 
 router.get('/regulamin', function(req, res){
-	res.render('regulamin', { title: 'Regulamin'});
+	res.render('main/regulamin', { title: 'Regulamin'});
 });
 
 router.get('/kdp_lodz', function(req, res){
-	res.render('kdp_lodz', { title: 'Kdp Łódź'});
+	res.render('main/kdp_lodz', { title: 'Kdp Łódź'});
 });
 
 router.get('/faq', function(req, res){
-	res.render('faq', { title: 'FAQ'});
+	res.render('main/faq', { title: 'FAQ'});
 });
 
 router.get('/kontakt', function(req, res){
-	res.render('kontakt', { title: 'Kontakt'});
+	res.render('main/kontakt', { title: 'Kontakt'});
 });
 
 ///obsluga wykresow
@@ -194,7 +194,7 @@ router.get('/', function(req, res) {
 router.post('/chart', function(req, res) {
   var first = req.body.first;
   var second = req.body.second;
-	
+
   if (first == '') {
     first = null;
   }

@@ -14,7 +14,6 @@ var app = express();
 
 //Adding the livereload server if app is in live-reload mode
 if (liveReload) {
-  console.log(liveReload);
   liveReload(app);
 }
 
