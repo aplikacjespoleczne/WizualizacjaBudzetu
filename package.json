@@ -24,5 +24,8 @@
   "subdomain": "budzetlodzi",
   "engines": {
     "node": "0.10.x"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
   }
 }
