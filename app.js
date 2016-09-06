@@ -8,7 +8,15 @@ var multer = require('multer');
 var debug = require('debug')('WizualizacjaBudzetu');
 var serverStatic = require('serve-static');
 var routes = require('./routes/index');
+var liveReload = require('./livereload');
+
 var app = express();
+
+//Adding the livereload server if app is in live-reload mode
+if (liveReload) {
+  console.log(liveReload);
+  liveReload(app);
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
