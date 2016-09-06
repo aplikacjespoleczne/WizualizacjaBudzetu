@@ -8,6 +8,7 @@ html
     script(type='text/javascript' src='/javascripts/typeahead.bundle.min.js')
     script(type='text/javascript' src='/javascripts/typeahead.jquery.js')
     script(type='text/javascript' src='/javascripts/bloodhound.js')
+    != LRScript
     script(type='text/javascript').
       $(document).ready(function(){
         var suggestions = new Bloodhound({
@@ -36,7 +37,7 @@ html
   body
     header
       #title
-        h1 Budżet Miasta Łodzi
+        h1 Budżet Miasta Łodzi asdasdf asdf as
       #search
         form(method="post" enctype="multipart/form-data" action="/search")
           #scrollable-dropdown-menu
