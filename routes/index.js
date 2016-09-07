@@ -1,9 +1,9 @@
 var express = require('express');
 var async = require("async");
 var router = express.Router();
-var csvParser = require('../csvParser');
-var dbConfig = require('../dbConfig');
-var AmountProvider = require('../amountProvider').AmountProvider;
+var csvParser = require('../utils/csvParser');
+var dbConfig = require('../utils/dbConfig');
+var AmountProvider = require('../utils/amountProvider').AmountProvider;
 var amountProvider = new AmountProvider();
 var d3 = require('d3');
 var jsdom = require('jsdom');
