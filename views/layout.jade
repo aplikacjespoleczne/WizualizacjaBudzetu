@@ -3,37 +3,10 @@ html
   head
     title= title
     script(src='http://code.jquery.com/jquery-1.11.1.min.js')
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    script(type='text/javascript' src='/javascripts/typeahead.bundle.js')
-    script(type='text/javascript' src='/javascripts/typeahead.bundle.min.js')
-    script(type='text/javascript' src='/javascripts/typeahead.jquery.js')
-    script(type='text/javascript' src='/javascripts/bloodhound.js')
+    link(rel='stylesheet', href='/stylesheets/styles.css')
+    script(type='text/javascript' src='/javascripts/scripts.js')
     != LRScript
-    script(type='text/javascript').
-      $(document).ready(function(){
-        var suggestions = new Bloodhound({
-          datumTokenizer: function(data) {
-            return Bloodhound.tokenizers.obj.whitespace(d.val)
-          },
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
-          remote: {
-            url: 'http://localhost:8080/query?query=%QUERY'
-            //filter: function(parsedResponse) {
-            //  parsedResponse.map(function(record){
-            //    return { value: record };
-            //  });
-            //}
-          }
-        });
-        suggestions.initialize();
-        $('.typeahead').typeahead({
-          minLength: 3
-        }, 
-        {
-          displayKey: 'value',
-          source: suggestions.ttAdapter()
-        })
-      });
+      
   body
     header
       #title
