@@ -81,16 +81,8 @@ app.use(function(err, req, res, next) {
     });
 });
 
-// Probably not needed as app is started from here
-//module.exports = app;
-
-
-// Moved from bin/www
 app.set('port', process.env.PORT || 8080);
 
 var server = app.listen(app.get('port'), function() {
    console.log('Express server listening on port ' + server.address().port);
 });
-//var server = app.listen(app.get('port'), function() {
-//  debug('Express server listening on port ' + server.address().port);
-//});
