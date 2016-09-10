@@ -55,7 +55,8 @@ table {
 }
 
 * {
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 /*  End of CSS reset */
@@ -75,6 +76,29 @@ body {
 .main-wrapper {
   height: 100%;
   background-color: #FAB300;
+  position: relative;
+  background-image: url("/images/assets/plac.png");
+  background-position: center bottom;
+  background-size: contain;
+  background-repeat: repeat-x;
+}
+
+.main-header {
+  padding-top: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.main-header .page-logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.main-header .page-logo img {
+  max-height: 50px;
 }
 
 .main-footer {
@@ -130,6 +154,11 @@ body {
   cursor: pointer;
   color: #6e6e6e;
   border-bottom: 2px solid #6e6e6e;
+}
+
+.main-content {
+  height: 100%;
+  padding-top: 100px;
 }
 
 /*# sourceMappingURL=../maps/styles.css.map */
