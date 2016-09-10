@@ -1,15 +1,18 @@
+"use strict"
+
 var gulp = require('gulp');
 
 //Util tools
 var sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('gulp-autoprefixer'),
     rename = require('gulp-rename'),
-    concat = require('gulp-concat');
+    concat = require('gulp-concat'),
+    clean = require('gulp-clean');
+
 
 //Tools
 var jshint = require('gulp-jshint'),
     sass = require('gulp-sass');
-
 
 //Tasks
 gulp.task('jshint', function() {
@@ -18,13 +21,26 @@ gulp.task('jshint', function() {
     .pipe(jshint.reporter('default'));
 });
 
-gulp.task("images", function () {
-  gulp.src("./frontend_src/img/*")
-    .pipe(gulp.dest("./public/images/"));
+//Images tasks
+gulp.task('images', ['images:copy']);
+
+gulp.task("images:copy", ['images:clean'], function () {
+  var imagesPath = "./frontend_src/img/**/*.*";
+
+  return gulp.src(imagesPath)
+  .pipe(gulp.dest("./public/images/"));
 });
 
+gulp.task("images:clean", function () {
+  var path = "./public/images/";
+
+  return gulp.src(path , {read: false})
+  .pipe(clean());
+});
+
+//Sass tasks
 gulp.task("sass", function() {
-  var mainPath = './frontend_src/sass/main.scss',
+  var mainPath = './frontend_src/sass/main.sass',
       outputPath = './public/stylesheets/',
 
       sassOptions = {
@@ -45,7 +61,9 @@ gulp.task("sass", function() {
         .pipe(gulp.dest(outputPath));
 });
 
-gulp.task('javascript', function() {
+gulp.task('javascript', ['javascript:concat']);
+
+gulp.task('javascript:concat', ['javascript:delete'], function() {
   var scriptsPath = './frontend_src/scripts/**/*.js',
       libJSPath = './frontend_src/lib/js/**/*.js',
       outputPath = './public/javascripts/';
@@ -57,10 +75,26 @@ gulp.task('javascript', function() {
       .pipe(gulp.dest(outputPath));
 });
 
+gulp.task('javascript:delete', function() {
+  var path = "./public/javascripts/";
+
+  return gulp.src(path , {read: false})
+    .pipe(clean());
+});
+
 // Watch task
-gulp.task('watch', function() {
-  gulp.watch('./frontend_src/sass/**/*.scss', ['sass']);
+gulp.task('watch', ['javascript'], function() {
+  gulp.watch('./frontend_src/sass/**/*.sass', ['sass']);
   gulp.watch('./frontend_src/scripts/**/*.js', ['javascript']);
+  gulp.watch('./frontend_src/img/**/*.*', ['images']);
 })
 
-gulp.task('default', ['images','sass','jshint','javascript','watch']);
+gulp.task('default',
+          [
+            'images',
+            'sass',
+            'jshint',
+            'javascript',
+            'watch'
+          ]
+);

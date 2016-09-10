@@ -1,0 +1,44 @@
+.main-footer
+  position: fixed
+  left: 0
+  right: 0
+  bottom: 0
+  height: $footerHeight
+  padding: 0 $bodyPadding 0 $bodyPadding
+  +footer-font
+
+  &::after
+    content: ' '
+    clear: both
+    display: table
+
+  &-logos
+    float: left
+    height: 100%
+
+    .logos-text
+      display: inline-block
+      height: 32px
+      margin:
+        right: 20px
+        left: 20px
+        top: ($footerHeight - 32px) / 2
+
+  &-links
+    float: right
+    height: 100%
+    padding-right: 80px
+
+    $fontHoverColor: darken($footerFontColor, 12%)
+    a
+      text-decoration: none
+      line-height: $footerHeight
+      margin-left: 35px
+      padding-bottom: 2px
+
+      &:visited, &:focus, &:active
+        color: $footerFontColor
+      &:hover
+        cursor: pointer
+        color: $fontHoverColor
+        border-bottom: 2px solid $fontHoverColor

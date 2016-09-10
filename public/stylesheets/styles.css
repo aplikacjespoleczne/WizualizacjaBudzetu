@@ -1,117 +1,135 @@
-* {
-  padding: 0;
+@import url(http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600,700,200&subset=latin,latin-ext);
+@import url(http://fonts.googleapis.com/css?family=Lato:400,300,600,700,200&subset=latin,latin-ext);
+/*  CSS reset
+  http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain) */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
   margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
 }
 
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  line-height: 1;
 }
 
-a {
-  color: #00B7FF;
+ol, ul {
+  list-style: none;
 }
 
-header {
-  border-bottom: black solid 1px;
-  height: 50px;
-  width: 100%;
+blockquote, q {
+  quotes: none;
 }
 
-#title {
-  padding: 10px;
-  letter-spacing: .3em;
-  float: left;
-  margin-left: 10px;
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
 }
 
-#search {
-  width: 350px;
-  font-size: 1.6em;
-  font-weight: bold;
-  padding: 10px;
-  float: right;
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
-#search input[type=text] {
-  width: 300px;
-  text-indent: 5px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  font-size: 1em;
-  border-radius: 3px;
-  border: 1px solid;
-  letter-spacing: .025em;
-  float: left;
+* {
+  box-sizing: border-box;
 }
 
-#search input[type=submit] {
-  width: 40px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  font-weight: bold;
-  font-size: 1em;
-  border-radius: 3px;
-  float: right;
+/*  End of CSS reset */
+/* Custom styles for Wizualizacja Budzetu */
+html, body {
+  height: 100%;
 }
 
-#content {
-  padding: 10px;
-  margin: 0 auto;
-  margin-left: 10px;
+body {
+  background: white;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 15px;
+  padding-bottom: 60px;
 }
 
-#content ol {
-  -webkit-padding-start: 2em;
+.main-wrapper {
+  height: 100%;
+  background-color: #FAB300;
 }
 
-#scrollable-dropdown-menu {
-  width: 300px;
-  display: inline;
-}
-
-footer {
-  margin: 0 auto;
-  width: 100%;
-  display: block;
-  position: absolute;
+.main-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
   bottom: 0;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-top: black solid 1px;
-}
-
-a.search-result {
-  color: black;
-  text-decoration: none;
-}
-
-footer div {
-  display: inline;
-  padding: 20px;
-  text-align: center;
-}
-
-.typeahead,
-.tt-query,
-.tt-hint,
-.tt-dropdown-menu {
-  width: 300px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.typeahead:focus {
-  border: 2px solid #0052a4;
-}
-
-.tt-suggestion {
+  height: 60px;
+  padding: 0 15px 0 15px;
+  font-family: serif;
+  color: #8d8d8d;
   font-size: 1em;
-  font-weight: normal;
-  line-height: 24px;
+  font-weight: bold;
 }
 
-.tt-suggestion.tt-cursor {
-  color: #fff;
-  background-color: #0052a4;
+.main-footer::after {
+  content: ' ';
+  clear: both;
+  display: table;
+}
+
+.main-footer-logos {
+  float: left;
+  height: 100%;
+}
+
+.main-footer-logos .logos-text {
+  display: inline-block;
+  height: 32px;
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-top: 14px;
+}
+
+.main-footer-links {
+  float: right;
+  height: 100%;
+  padding-right: 80px;
+}
+
+.main-footer-links a {
+  text-decoration: none;
+  line-height: 60px;
+  margin-left: 35px;
+  padding-bottom: 2px;
+}
+
+.main-footer-links a:visited, .main-footer-links a:focus, .main-footer-links a:active {
+  color: #8d8d8d;
+}
+
+.main-footer-links a:hover {
+  cursor: pointer;
+  color: #6e6e6e;
+  border-bottom: 2px solid #6e6e6e;
 }
 
 /*# sourceMappingURL=../maps/styles.css.map */
