@@ -12,22 +12,39 @@
     clear: both
     display: table
 
-  &-logos
+  &-partners
     float: left
     height: 100%
 
-    .logos-text
+  .partners-text
+    display: inline-block
+    height: 32px
+    margin:
+      right: 30px
+      left: 25px
+      top: ($footerHeight - 32px) / 2
+
+  .partners-list
+    display: inline-block
+    vertical-align: top
+    a
+      cursor: pointer
+    li
+      line-height: $footerHeight
       display: inline-block
-      height: 32px
-      margin:
-        right: 20px
-        left: 20px
-        top: ($footerHeight - 32px) / 2
+      margin-right: 25px
+    img
+      max-height: 48px
+      vertical-align: middle
+    img.svg
+      max-height: 30px
 
   &-links
     float: right
     height: 100%
     padding-right: 80px
+    li
+      display: inline-block
 
     $fontHoverColor: darken($footerFontColor, 12%)
     a

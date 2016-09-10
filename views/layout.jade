@@ -22,11 +22,18 @@ html
         block content
       
       footer.main-footer
-        div.main-footer-logos
-          span.logos-text Partnerzy i <br/> przyjaciele:
-        div.main-footer-links
-          a(href='regulamin') Regulamin
-          a(href='autorzy') Autorzy
-          a(href='kdp_lodz') KdP Łódź
-          a(href='faq') FAQ
-          a(href='Kontakt') Kontakt
+        div.main-footer-partners
+          span.partners-text Partnerzy i <br/> przyjaciele:
+          ul.partners-list
+            li: a(href="/"): img.svg(src="/images/partners/kdp.svg")
+            li: a(href="/"): img.svg(src="/images/partners/fep.svg")
+            li: a(href="/"): img(src="/images/partners/chomonto.png")
+            li: a(href="/"): img(src="/images/partners/inspro.png")
+            li: a(href="/"): img(src="images/partners/prowly.png")
+            
+        ul.main-footer-links
+          li(): a(href='regulamin') Regulamin
+          li(): a(href='autorzy') Autorzy
+          li(): a(href='kdp_lodz') KdP Łódź
+          li(): a(href='faq') FAQ
+          li(): a(href='Kontakt') Kontakt
