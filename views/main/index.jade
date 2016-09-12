@@ -1,11 +1,17 @@
 extends ../layout
 
 block content
-  form(method="post" enctype="multipart/form-data" action="/chart")
-    #username
-      | dział
-      input(type='text' name='first' id='first')
-    #password  
-      | rozdział
-      input(type='text' name='second' id='second')
-    input(type='submit' value='Pokaż wykres')
+  //- section.main-content
+  aside.main-content--aside
+  div.main-content--kosciuszko
+
+
+  //Old file forms
+  //- form(method="post" enctype="multipart/form-data" action="/chart")
+  //-   #username
+  //-     | dział
+  //-     input(type='text' name='first' id='first')
+  //-   #password  
+  //-     | rozdział
+  //-     input(type='text' name='second' id='second')
+  //-   input(type='submit' value='Pokaż wykres')

@@ -57,8 +57,7 @@ table {
 }
 
 * {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 /*  End of CSS reset */
@@ -84,6 +83,7 @@ body {
   background-position: center bottom;
   background-size: contain;
   background-repeat: repeat-x;
+  overflow-x: hidden;
 }
 
 .main-header {
@@ -92,6 +92,7 @@ body {
   top: 0;
   left: 0;
   right: 75%;
+  z-index: 3;
 }
 
 .main-header .page-logo {
@@ -119,6 +120,7 @@ body {
   font-size: 18px;
   color: white;
   line-height: 20px;
+  cursor: pointer;
 }
 
 .main-header-nav--item a:hover, .main-header-nav--item a:active, .main-header-nav--item a:focus, .main-header-nav--item a.active {
@@ -225,8 +227,7 @@ body {
   bottom: 15px;
   left: 50%;
   background: #8d8d8d;
-  -webkit-transition: width 200ms ease-out, left 200ms ease-out;
-          transition: width 200ms ease-out, left 200ms ease-out;
+  transition: width 200ms ease-out, left 200ms ease-out;
 }
 
 .main-footer-links a:visited, .main-footer-links a:focus, .main-footer-links a:active {
@@ -259,7 +260,30 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  visibility: hidden;
+  z-index: 0;
+}
+
+.main-content::before {
+  content: ' ';
+  height: 100%;
+  background-image: url("/images/assets/kosciuszko_faded.png");
+  background-position: center bottom;
+  background-size: auto 85%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 0;
+  right: -9%;
+}
+
+.main-content--kosciuszko {
+  height: 100%;
+  background-image: url("/images/assets/kosciuszko.png");
+  background-position: center bottom;
+  background-size: auto 85%;
+  background-repeat: repeat-x;
+  position: absolute;
+  left: 0;
+  right: -9%;
 }
 
 /*# sourceMappingURL=../maps/styles.css.map */

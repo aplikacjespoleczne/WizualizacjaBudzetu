@@ -3,4 +3,24 @@
   position: absolute
   left: 0
   right: 0
-  visibility: hidden
+  z-index: 0
+  &::before
+    content: ' '
+    height: 100%
+    background-image: url('/images/assets/kosciuszko_faded.png')
+    background-position: center bottom
+    background-size: auto 85%
+    background-repeat: no-repeat
+    position: absolute
+    left: 0
+    right: -9%
+
+  &--kosciuszko
+    height: 100%
+    background-image: url('/images/assets/kosciuszko.png')
+    background-position: center bottom
+    background-size: auto 85%
+    background-repeat: repeat-x
+    position: absolute
+    left: 0
+    right: -9%

@@ -4,6 +4,7 @@
   top: 0
   left: 0
   right: 75%
+  z-index: 3
 
   .page-logo
     position: absolute
@@ -25,6 +26,7 @@
         font-size: 18px
         color: white
         line-height: 20px
+        cursor: pointer
 
         &:hover, &:active, &:focus, &.active
           border-bottom: 1px solid white
@@ -40,4 +42,4 @@
     padding-top: 20px
 
     &-nav
-      padding-left: $navPaddingLeft + 40px
+      padding-left: $navPaddingLeft-heightAdjusted
