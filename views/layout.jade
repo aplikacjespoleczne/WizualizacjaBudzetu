@@ -12,12 +12,10 @@ html
       header.main-header
         a.page-logo(href='/')
           img(src="/images/assets/wbm_white.png")
-        #search
-          form(method="post" enctype="multipart/form-data" action="/search")
-            #scrollable-dropdown-menu
-              input(class='typeahead' type='text' value='search' name='query' onclick="if (this.defaultValue==this.value) this.value=''")
-            input(type='submit' value='ok')
       
+      section.side-content
+        block sideContent
+        
       section.main-content
         block content
       

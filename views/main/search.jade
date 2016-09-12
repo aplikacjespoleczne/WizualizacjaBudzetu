@@ -1,6 +1,12 @@
 extends ../layout
 
 block content
+  #search
+    form(method="post" enctype="multipart/form-data" action="/search")
+      #scrollable-dropdown-menu
+        input(class='typeahead' type='text' value='search' name='query' onclick="if (this.defaultValue==this.value) this.value=''")
+      input(type='submit' value='ok')
+    
   h1 Wyszukiwanie Pozycji Budżetowych:
   br
   p Wyniki znalezione dla hasła '#{query}' (#{total})
