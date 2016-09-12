@@ -12,10 +12,11 @@ html
       header.main-header
         a.page-logo(href='/')
           img(src="/images/assets/wbm_white.png")
+        ul.main-header-nav
+          li.main-header-nav--item(): a(href='/') Strona główna
+          li.main-header-nav--item(): a(href='/budzet') Budżet miasta
+          li.main-header-nav--item(): a(href='/o_projekcie') O projekcie
       
-      section.side-content
-        block sideContent
-        
       section.main-content
         block content
       

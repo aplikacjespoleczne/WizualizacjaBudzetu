@@ -11,3 +11,33 @@
     left: 20px
     img
       max-height: 50px
+
+  &-nav
+    padding:
+      left: $navPaddingLeft
+
+    &--item
+      height: 36px
+      a
+        position: relative
+        text-decoration: none
+        font-weight: 500
+        font-size: 18px
+        color: white
+        line-height: 20px
+
+        &:hover, &:active, &:focus, &.active
+          border-bottom: 1px solid white
+        &.active::before
+          content: '>'
+          font-size: 21px
+          display: inline-block
+          position: absolute
+          left: -20px
+
+@media screen and (max-height: 850px)
+  .main-header
+    padding-top: 20px
+
+    &-nav
+      padding-left: $navPaddingLeft + 40px

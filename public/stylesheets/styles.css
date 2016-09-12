@@ -1,5 +1,7 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&subset=latin-ext);
 @import url(http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600,700,200&subset=latin,latin-ext);
 @import url(http://fonts.googleapis.com/css?family=Lato:400,300,600,700,200&subset=latin,latin-ext);
+@import url(http://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i&subset=latin-ext);
 /*  CSS reset
   http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
@@ -66,6 +68,7 @@ html, body {
 }
 
 body {
+  font-family: 'Source Sans Pro', sans-serif;
   background: white;
   padding-left: 15px;
   padding-right: 15px;
@@ -101,6 +104,44 @@ body {
   max-height: 50px;
 }
 
+.main-header-nav {
+  padding-left: 85px;
+}
+
+.main-header-nav--item {
+  height: 36px;
+}
+
+.main-header-nav--item a {
+  position: relative;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 18px;
+  color: white;
+  line-height: 20px;
+}
+
+.main-header-nav--item a:hover, .main-header-nav--item a:active, .main-header-nav--item a:focus, .main-header-nav--item a.active {
+  border-bottom: 1px solid white;
+}
+
+.main-header-nav--item a.active::before {
+  content: '>';
+  font-size: 21px;
+  display: inline-block;
+  position: absolute;
+  left: -20px;
+}
+
+@media screen and (max-height: 850px) {
+  .main-header {
+    padding-top: 20px;
+  }
+  .main-header-nav {
+    padding-left: 125px;
+  }
+}
+
 .main-footer {
   position: fixed;
   left: 0;
@@ -108,10 +149,9 @@ body {
   bottom: 0;
   height: 60px;
   padding: 0 15px 0 15px;
-  font-family: serif;
   color: #8d8d8d;
   font-size: 1em;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .main-footer::after {
@@ -219,16 +259,7 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  padding-top: 100px;
-  padding-left: 25%;
-}
-
-.side-content {
-  position: absolute;
-  bottom: 0;
-  top: 200px;
-  left: 0;
-  right: 75%;
+  visibility: hidden;
 }
 
 /*# sourceMappingURL=../maps/styles.css.map */
