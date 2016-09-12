@@ -48,14 +48,36 @@
 
     $fontHoverColor: darken($footerFontColor, 12%)
     a
+      position: relative
       text-decoration: none
       line-height: $footerHeight
       margin-left: 35px
       padding-bottom: 2px
+      display: inline-block
+
+      &::after
+        content: ' '
+        display: block
+        width: 0
+        height: 3px
+        position: absolute
+        bottom: 15px
+        left: 50%
+        background: $footerFontColor
+        transition: width 200ms ease-out, left 200ms ease-out
 
       &:visited, &:focus, &:active
         color: $footerFontColor
       &:hover
         cursor: pointer
         color: $fontHoverColor
-        border-bottom: 2px solid $fontHoverColor
+        &::after
+          width: 80%
+          left: 10%
+          background: $fontHoverColor
+      &.active, &.active:hover
+        color: $fontHoverColor
+        &::after
+          width: 100%
+          left: 0
+          background: $fontHoverColor

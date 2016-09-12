@@ -145,7 +145,7 @@ body {
 .main-footer .partners-list li {
   line-height: 60px;
   display: inline-block;
-  margin-right: 30px;
+  margin-right: 25px;
 }
 
 .main-footer .partners-list img {
@@ -168,10 +168,25 @@ body {
 }
 
 .main-footer-links a {
+  position: relative;
   text-decoration: none;
   line-height: 60px;
   margin-left: 35px;
   padding-bottom: 2px;
+  display: inline-block;
+}
+
+.main-footer-links a::after {
+  content: ' ';
+  display: block;
+  width: 0;
+  height: 3px;
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  background: #8d8d8d;
+  -webkit-transition: width 200ms ease-out, left 200ms ease-out;
+          transition: width 200ms ease-out, left 200ms ease-out;
 }
 
 .main-footer-links a:visited, .main-footer-links a:focus, .main-footer-links a:active {
@@ -181,7 +196,22 @@ body {
 .main-footer-links a:hover {
   cursor: pointer;
   color: #6e6e6e;
-  border-bottom: 2px solid #6e6e6e;
+}
+
+.main-footer-links a:hover::after {
+  width: 80%;
+  left: 10%;
+  background: #6e6e6e;
+}
+
+.main-footer-links a.active, .main-footer-links a.active:hover {
+  color: #6e6e6e;
+}
+
+.main-footer-links a.active::after, .main-footer-links a.active:hover::after {
+  width: 100%;
+  left: 0;
+  background: #6e6e6e;
 }
 
 .main-content {
