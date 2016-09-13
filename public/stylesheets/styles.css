@@ -75,17 +75,6 @@ body {
   padding-bottom: 60px;
 }
 
-.main-wrapper {
-  height: 100%;
-  background-color: #FAB300;
-  position: relative;
-  background-image: url("/images/assets/plac.png");
-  background-position: center bottom;
-  background-size: contain;
-  background-repeat: repeat-x;
-  overflow-x: hidden;
-}
-
 .main-header {
   padding-top: 100px;
   position: absolute;
@@ -110,16 +99,16 @@ body {
 }
 
 .main-header-nav--item {
-  height: 36px;
+  height: 3em;
 }
 
 .main-header-nav--item a {
   position: relative;
   text-decoration: none;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 1.6em;
   color: white;
-  line-height: 20px;
+  line-height: 1.6em;
   cursor: pointer;
 }
 
@@ -129,10 +118,10 @@ body {
 
 .main-header-nav--item a.active::before {
   content: '>';
-  font-size: 21px;
+  font-size: 1.15em;
   display: inline-block;
   position: absolute;
-  left: -20px;
+  left: -0.9em;
 }
 
 @media screen and (max-height: 850px) {
@@ -152,7 +141,7 @@ body {
   height: 60px;
   padding: 0 15px 0 15px;
   color: #8d8d8d;
-  font-size: 1em;
+  font-size: 1.1em;
   font-weight: 600;
 }
 
@@ -255,6 +244,19 @@ body {
   background: #6e6e6e;
 }
 
+.main-wrapper {
+  height: 100%;
+  background-color: #FAB300;
+  position: relative;
+  color: white;
+  background-image: url("/images/assets/plac.png");
+  background-position: center bottom;
+  background-size: auto 92%;
+  background-repeat: repeat-x;
+  overflow-x: hidden;
+  font-size: 0.85em;
+}
+
 .main-content {
   height: 100%;
   position: absolute;
@@ -268,7 +270,7 @@ body {
   height: 100%;
   background-image: url("/images/assets/kosciuszko_faded.png");
   background-position: center bottom;
-  background-size: auto 85%;
+  background-size: auto 76%;
   background-repeat: no-repeat;
   position: absolute;
   left: 0;
@@ -279,11 +281,73 @@ body {
   height: 100%;
   background-image: url("/images/assets/kosciuszko.png");
   background-position: center bottom;
-  background-size: auto 85%;
+  background-size: auto 80%;
   background-repeat: repeat-x;
   position: absolute;
   left: 0;
   right: -9%;
+  z-index: 0;
+}
+
+.main-content--aside {
+  position: absolute;
+  left: 0;
+  width: 310px;
+  top: 27%;
+  padding-left: 85px;
+  z-index: 1;
+}
+
+.main-content--aside h1 {
+  font-size: 2.8em;
+  font-weight: 600;
+  margin: 22px 0;
+}
+
+.main-content--aside p {
+  font-size: 1.1em;
+  text-align: justify;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+.main-content--aside-footer {
+  margin-top: 35px;
+}
+
+.main-content--aside-footer h3 {
+  font-size: 1.6em;
+  font-weight: 300;
+  line-height: 125%;
+  margin-bottom: 12px;
+}
+
+.main-content--aside-footer h3 strong {
+  font-size: 1.15em;
+  font-weight: 600;
+}
+
+.main-content--aside-footer button {
+  background: #E8490F;
+  height: 32px;
+  border: none;
+  color: white;
+  font-weight: 600;
+  width: 140px;
+  cursor: pointer;
+  border: 0;
+  border-bottom: 2px solid #b83a0c;
+  -webkit-box-shadow: inset 0 -2px #b83a0c;
+  box-shadow: inset 0 -2px #b83a0c;
+}
+
+.main-content--aside-footer button:hover {
+  background: #da440e;
+}
+
+.main-content--aside-footer button::after {
+  content: '>>';
+  margin-left: 5px;
 }
 
 /*# sourceMappingURL=../maps/styles.css.map */

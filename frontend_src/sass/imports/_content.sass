@@ -1,15 +1,27 @@
+.main-wrapper
+  height: 100%
+  background-color: $baseBackgroundColor
+  position: relative
+  color: $baseFontColor
+  background-image: url('/images/assets/plac.png')
+  background-position: center bottom
+  background-size: auto 92%
+  background-repeat: repeat-x
+  overflow-x: hidden
+  font-size: 0.85em
 .main-content
   height: 100%
   position: absolute
   left: 0
   right: 0
   z-index: 0
+
   &::before
     content: ' '
     height: 100%
     background-image: url('/images/assets/kosciuszko_faded.png')
     background-position: center bottom
-    background-size: auto 85%
+    background-size: auto 76%
     background-repeat: no-repeat
     position: absolute
     left: 0
@@ -19,8 +31,62 @@
     height: 100%
     background-image: url('/images/assets/kosciuszko.png')
     background-position: center bottom
-    background-size: auto 85%
+    background-size: auto 80%
     background-repeat: repeat-x
     position: absolute
     left: 0
     right: -9%
+    z-index: 0
+
+  &--aside
+    position: absolute
+    left: 0
+    width: 310px
+    top: 27%
+    padding-left: $navPaddingLeft
+    z-index: 1
+
+    h1
+      font-size: 2.8em
+      font-weight: 600
+      margin: 22px 0
+    p
+      font-size: 1.1em
+      text-align: justify
+      font-weight: 300
+      letter-spacing: 1px
+
+    &-footer
+      margin-top: 35px
+
+      h3
+        font-size: 1.6em
+        font-weight: 300
+        line-height: 125%
+        margin-bottom: 12px
+
+      h3 strong
+        font-size: 1.15em
+        font-weight: 600
+
+      button
+        $kosciuszkoRedColorDark: darken($kosciuszkoRedColor, 10%)
+        background: $kosciuszkoRedColor
+        height: 32px
+        border: none
+        color: $baseFontColor
+        font-weight: 600
+        width: 140px
+        cursor: pointer
+        border: 0
+        border-bottom: 2px solid $kosciuszkoRedColorDark
+        -webkit-box-shadow: inset 0 -2px $kosciuszkoRedColorDark
+        box-shadow: inset 0 -2px $kosciuszkoRedColorDark
+
+        &:hover
+          background: darken($kosciuszkoRedColor, 3%)
+
+
+        &::after
+          content: '>>'
+          margin-left: 5px

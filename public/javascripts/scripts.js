@@ -3709,12 +3709,13 @@
   document.addEventListener('DOMContentLoaded', addActiveClass);
 
   function addActiveClass() {
-    var elements, selector;
+    var elements = [],
+        selector;
 
     selector = "[href='" + location.pathname.slice(1) + "']" + ",[href='" + location.pathname + "']";
     elements = document.querySelectorAll(selector);
 
-    elements.forEach(function(element) {
+    Array.prototype.forEach.call(elements, function(element) {
       element.classList.add('active');
     });
   }
