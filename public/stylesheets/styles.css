@@ -269,7 +269,7 @@ body {
   color: white;
   background-image: url("/images/assets/plac.png");
   background-position: center bottom;
-  background-size: auto 92%;
+  background-size: auto 85%;
   background-repeat: repeat-x;
   overflow-x: hidden;
   font-size: 0.85em;
@@ -288,7 +288,7 @@ body {
   height: 100%;
   background-image: url("/images/assets/kosciuszko_faded.png");
   background-position: center bottom;
-  background-size: auto 76%;
+  background-size: auto 60%;
   background-repeat: no-repeat;
   position: absolute;
   left: 0;
@@ -299,7 +299,7 @@ body {
   height: 100%;
   background-image: url("/images/assets/kosciuszko.png");
   background-position: center bottom;
-  background-size: auto 80%;
+  background-size: auto 70%;
   background-repeat: repeat-x;
   position: absolute;
   left: 0;
@@ -368,13 +368,21 @@ body {
   margin-left: 5px;
 }
 
+.main-content--lines {
+  position: relative;
+  left: 50%;
+  margin-top: -70px;
+  top: 30%;
+}
+
 @media screen and (max-height: 850px) {
   .main-wrapper {
     font-size: 0.70em;
   }
   .main-content--aside {
-    top: 20%;
-    padding-left: 50px;
+    top: 25%;
+    padding-left: 5%;
+    width: 30%;
   }
   .main-content--aside-footer {
     margin-top: 25px;
