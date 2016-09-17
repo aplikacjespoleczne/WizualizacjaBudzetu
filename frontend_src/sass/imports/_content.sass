@@ -27,17 +27,6 @@
     left: 0
     right: -9%
 
-  &--kosciuszko
-    height: 100%
-    background-image: url('/images/assets/kosciuszko.png')
-    background-position: center bottom
-    background-size: auto 70%
-    background-repeat: repeat-x
-    position: absolute
-    left: 0
-    right: -9%
-    z-index: 0
-
   &--aside
     position: absolute
     left: 0
@@ -91,11 +80,46 @@
           content: '>>'
           margin-left: 5px
 
+
+.monument
+  height: 100%
+  background-image: url('/images/assets/kosciuszko.png')
+  background-position: center bottom
+  background-size: auto 70%
+  background-repeat: repeat-x
+  position: absolute
+  left: 0
+  right: -9%
+  z-index: 0
+
   &--lines
     position: relative
     left: 50%
     margin-top: -70px
     top: 30%
+
+  @for $i from 1 through 6
+    &--line-#{$i}
+      top: 60px * ($i - 1)
+
+[class|='monument--line']
+  position: absolute
+  background-image: url('/images/assets/dashedLine.svg')
+  background-size: contain
+  background-repeat: no-repeat
+  height: 100px
+  width: 350px
+  transition: transform 300ms linear
+  transform-origin: left
+
+  &:hover
+    transform: scale(1.05)
+  a
+    float: right
+    cursor: pointer
+    transition: transform .3s linear
+    &:hover
+      transform: scale(1.2)
 
 @media screen and (max-height: 850px)
   .main-wrapper

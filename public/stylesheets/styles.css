@@ -57,7 +57,8 @@ table {
 }
 
 * {
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 /*  End of CSS reset */
@@ -216,7 +217,8 @@ body {
   bottom: 15px;
   left: 50%;
   background: #8d8d8d;
-  transition: width 200ms ease-out, left 200ms ease-out;
+  -webkit-transition: width 200ms ease-out, left 200ms ease-out;
+          transition: width 200ms ease-out, left 200ms ease-out;
 }
 
 .main-footer-links a:visited, .main-footer-links a:focus, .main-footer-links a:active {
@@ -295,18 +297,6 @@ body {
   right: -9%;
 }
 
-.main-content--kosciuszko {
-  height: 100%;
-  background-image: url("/images/assets/kosciuszko.png");
-  background-position: center bottom;
-  background-size: auto 70%;
-  background-repeat: repeat-x;
-  position: absolute;
-  left: 0;
-  right: -9%;
-  z-index: 0;
-}
-
 .main-content--aside {
   position: absolute;
   left: 0;
@@ -368,11 +358,80 @@ body {
   margin-left: 5px;
 }
 
-.main-content--lines {
+.monument {
+  height: 100%;
+  background-image: url("/images/assets/kosciuszko.png");
+  background-position: center bottom;
+  background-size: auto 70%;
+  background-repeat: repeat-x;
+  position: absolute;
+  left: 0;
+  right: -9%;
+  z-index: 0;
+}
+
+.monument--lines {
   position: relative;
   left: 50%;
   margin-top: -70px;
   top: 30%;
+}
+
+.monument--line-1 {
+  top: 0px;
+}
+
+.monument--line-2 {
+  top: 60px;
+}
+
+.monument--line-3 {
+  top: 120px;
+}
+
+.monument--line-4 {
+  top: 180px;
+}
+
+.monument--line-5 {
+  top: 240px;
+}
+
+.monument--line-6 {
+  top: 300px;
+}
+
+[class|='monument--line'] {
+  position: absolute;
+  background-image: url("/images/assets/dashedLine.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 100px;
+  width: 350px;
+  -webkit-transition: -webkit-transform 300ms linear;
+          transition: transform 300ms linear;
+  -webkit-transform-origin: left;
+      -ms-transform-origin: left;
+          transform-origin: left;
+}
+
+[class|='monument--line']:hover {
+  -webkit-transform: scale(1.05);
+      -ms-transform: scale(1.05);
+          transform: scale(1.05);
+}
+
+[class|='monument--line'] a {
+  float: right;
+  cursor: pointer;
+  -webkit-transition: -webkit-transform .3s linear;
+          transition: transform .3s linear;
+}
+
+[class|='monument--line'] a:hover {
+  -webkit-transform: scale(1.2);
+      -ms-transform: scale(1.2);
+          transform: scale(1.2);
 }
 
 @media screen and (max-height: 850px) {
